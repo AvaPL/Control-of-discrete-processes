@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using NUnit.Framework;
 using RPQ;
 
@@ -40,8 +41,12 @@ namespace RpqTests
         [Test]
         public void ShouldReadListedTasksCorrectly()
         {
-            Assert.Fail(); //TODO: Implement.
-                           //TODO(optional): Implement equality members in Task. 
+            TaskReader taskReader = new TaskReader();
+            List<Task> tasks = taskReader.ReadTasksFromFile(fileReader);
+            Task task = new Task(219, 5, 276);
+            Assert.AreEqual(tasks[0], task);
+            task = new Task(79, 60, 235);
+            Assert.AreEqual(tasks.Last(), task);
         }
     }
 }

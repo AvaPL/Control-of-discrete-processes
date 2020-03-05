@@ -20,5 +20,31 @@ namespace RPQ
             int[] times = taskString.Split(' ').Select(int.Parse).ToArray();
             return new Task(times[0], times[1], times[2]);
         }
+
+        protected bool Equals(Task other)
+        {
+            return ReadyTime == other.ReadyTime
+                   && PerformTime == other.PerformTime
+                   && QuitTime == other.QuitTime;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Task)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = ReadyTime;
+                hashCode = (hashCode * 397) ^ PerformTime;
+                hashCode = (hashCode * 397) ^ QuitTime;
+                return hashCode;
+            }
+        }
     }
 }
