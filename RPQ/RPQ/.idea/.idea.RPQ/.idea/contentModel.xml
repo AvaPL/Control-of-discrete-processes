@@ -13,6 +13,8 @@
           <e p="AssemblyInfo.cs" t="Include" />
         </e>
         <e p="RPQ.csproj" t="IncludeRecursive" />
+        <e p="Task.cs" t="Include" />
+        <e p="TaskReader.cs" t="Include" />
       </e>
       <e p="RPQ.sln" t="IncludeFlat" />
       <e p="RPQTests" t="IncludeRecursive">
