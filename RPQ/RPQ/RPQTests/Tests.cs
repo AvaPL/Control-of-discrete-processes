@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using NUnit.Framework;
+using RPQ;
 
 namespace RPQTests
 {
@@ -7,9 +9,9 @@ namespace RPQTests
     public class Tests
     {
         [Test]
-        public void Test1()
+        public void ShouldReadFileCorrectly()
         {
-            Assert.True(true);
+            StreamReader streamReader = new StreamReader(@"../../../Debug/data10.txt");
         }
     }
 }
