@@ -1,36 +1,40 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using NUnit.Framework;
+using RPQ;
 
 namespace RpqTests
 {
     [TestFixture]
     public class TaskReaderTests
     {
-        private const string Filepath = @"../../../Data/data10.txt";
-        private StreamReader _fileReader;
+        private const string Filepath = @"../../../Data/data10.txt"; // Change every time 
+        private StreamReader fileReader;
 
         [SetUp]
         public void SetUp()
         {
-            _fileReader = new StreamReader(Filepath);
+            fileReader = new StreamReader(Filepath);
         }
 
         [TearDown]
         public void TearDown()
         {
-            _fileReader.Close();
+            fileReader.Close();
         }
 
         [Test]
         public void ShouldFindDataFile()
         {
-            Assert.NotNull(_fileReader.ReadLine());
+            Assert.NotNull(fileReader.ReadLine());
         }
 
         [Test]
         public void ShouldReadCorrectTaskListLength()
         {
-            Assert.Fail(); //TODO: Implement.
+            TaskReader taskReader = new TaskReader();
+            List<Task> tasks = taskReader.ReadTasksFromFile(fileReader);
+            Assert.AreEqual(tasks.Count, 10);
         }
 
         [Test]
