@@ -1,9 +1,10 @@
-﻿﻿using System.Linq;
+﻿﻿using System;
+ using System.Linq;
  using System.Text.RegularExpressions;
 
  namespace RPQ
 {
-    public class Task
+    public class Task : IComparable<Task>
     {
         public int ReadyTime { get; }
         public int PerformTime { get; }
@@ -47,6 +48,15 @@
                 hashCode = (hashCode * 397) ^ QuitTime;
                 return hashCode;
             }
+        }
+
+        public int CompareTo(Task other)
+        {
+            if (ReferenceEquals(this, other)) return 0;
+            if (ReferenceEquals(null, other)) return 1;
+            int readyTimeComparison = ReadyTime.CompareTo(other.ReadyTime);
+            if (readyTimeComparison != 0) return readyTimeComparison;
+            return QuitTime.CompareTo(other.QuitTime);
         }
     }
 }
