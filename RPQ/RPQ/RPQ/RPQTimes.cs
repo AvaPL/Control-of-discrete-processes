@@ -1,25 +1,25 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace RPQ
 {
-    public class RpqTimes
+    public class RPQTimes
     {
-        public List<int> StartTimes { get; }
-        public List<int> CompleteTimes { get; }
-        public List<int> QuitTimes { get; }
+        public int[] StartTimes { get; }
+        public int[] CompleteTimes { get; }
+        public int[] QuitTimes { get; }
 
-        private RpqTimes(int numberOfTasks)
+        private RPQTimes(int numberOfTasks)
         {
-            StartTimes = new List<int>(numberOfTasks);
-            CompleteTimes = new List<int>(numberOfTasks);
-            QuitTimes = new List<int>(numberOfTasks);
+            StartTimes = new int[numberOfTasks];
+            CompleteTimes = new int[numberOfTasks];
+            QuitTimes = new int[numberOfTasks];
         }
 
-        public static RpqTimes Calculate(List<Task> tasks)
+        public static RPQTimes Calculate(List<Task> tasks)
         {
-            RpqTimes result = new RpqTimes(tasks.Count);
+            RPQTimes result = new RPQTimes(tasks.Count);
             for (int i = 0; i < tasks.Count; i++)
             {
                 result.StartTimes[i] =
