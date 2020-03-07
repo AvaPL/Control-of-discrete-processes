@@ -9,7 +9,7 @@ namespace RpqTests
     [TestFixture]
     public class TaskReaderTests
     {
-        private const string Filepath = @"../../../Data/data10.txt"; // Change every time 
+        private const string Filepath = "../../Data/data10.txt"; // Change every time 
         private StreamReader fileReader;
 
         [SetUp]
