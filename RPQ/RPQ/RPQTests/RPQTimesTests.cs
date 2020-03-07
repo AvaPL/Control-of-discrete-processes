@@ -64,12 +64,12 @@ namespace RpqTests
         {
             string[] filePaths = 
             {
-                @"../../../Data/data10.txt",
-                @"../../../Data/data20.txt",
-                @"../../../Data/data50.txt",
-                @"../../../Data/data100.txt",
-                @"../../../Data/data200.txt",
-                @"../../../Data/data500.txt"
+                @"../../Data/data10.txt",
+                @"../../Data/data20.txt",
+                @"../../Data/data50.txt",
+                @"../../Data/data100.txt",
+                @"../../Data/data200.txt",
+                @"../../Data/data500.txt"
             };
             int[] expectedResults = 
             {
