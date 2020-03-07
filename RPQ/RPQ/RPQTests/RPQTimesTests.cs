@@ -108,7 +108,8 @@ using System.IO;
                 StreamReader fileReader = new StreamReader(FilePaths[i]);
                 TaskReader taskReader = new TaskReader();
                 List<Task> tasks = taskReader.ReadTasksFromFile(fileReader);
-                RPQTimes rpqTimes = RPQTimes.Calculate(tasks.OrderBy(t=>t.ReadyTime).ToList());
+                tasks.Sort((x, y) => x.ReadyTime.CompareTo(y.ReadyTime));
+                RPQTimes rpqTimes = RPQTimes.Calculate(tasks);
                 Assert.AreEqual(ExpectedSortedResults[i], rpqTimes.GetMaxQuitTime());
             } 
         }
