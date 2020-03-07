@@ -1,6 +1,7 @@
 ﻿﻿using System.Linq;
+ using System.Text.RegularExpressions;
 
-namespace RPQ
+ namespace RPQ
 {
     public class Task
     {
@@ -17,7 +18,8 @@ namespace RPQ
 
         public static Task Parse(string taskString)
         {
-            int[] times = taskString.Split(' ').Select(int.Parse).ToArray();
+            Regex regex = new Regex(@"\s+");
+            int[] times = regex.Split(taskString).Select(int.Parse).ToArray();
             return new Task(times[0], times[1], times[2]);
         }
 
