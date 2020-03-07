@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
@@ -35,7 +35,7 @@ namespace RpqTests
         {
             TaskReader taskReader = new TaskReader();
             List<Task> tasks = taskReader.ReadTasksFromFile(fileReader);
-            Assert.AreEqual(tasks.Count, 10);
+            Assert.AreEqual(10, tasks.Count);
         }
 
         [Test]
@@ -46,7 +46,7 @@ namespace RpqTests
             Task task = new Task(219, 5, 276);
             Assert.AreEqual(tasks[0], task);
             task = new Task(79, 60, 235);
-            Assert.AreEqual(tasks.Last(), task);
+            Assert.AreEqual(task, tasks.Last());
         }
     }
 }
