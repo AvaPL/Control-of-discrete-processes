@@ -1,7 +1,9 @@
-﻿﻿using NUnit.Framework;
+﻿﻿using System;
+ using NUnit.Framework;
 using RPQ;
 using System.Collections.Generic;
-using System.IO;
+ using System.Diagnostics;
+ using System.IO;
  using System.Linq;
 
  namespace RpqTests
@@ -108,11 +110,18 @@ using System.IO;
                 StreamReader fileReader = new StreamReader(FilePaths[i]);
                 TaskReader taskReader = new TaskReader();
                 List<Task> tasks = taskReader.ReadTasksFromFile(fileReader);
-                tasks.Sort((x, y) => x.ReadyTime.CompareTo(y.ReadyTime));
+                Sort(tasks);
                 RPQTimes rpqTimes = RPQTimes.Calculate(tasks);
                 Assert.AreEqual(ExpectedSortedResults[i], rpqTimes.GetMaxQuitTime());
             } 
         }
-        
+
+        private static void Sort(List<Task> tasks)
+        {
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            tasks.Sort();
+            stopwatch.Stop();
+            Console.Out.WriteLine(stopwatch.Elapsed);
+        }
     }
 }
