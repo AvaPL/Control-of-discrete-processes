@@ -1,20 +1,29 @@
-﻿﻿using System;
- using System.Linq;
- using System.Text.RegularExpressions;
+﻿using System;
+using System.Linq;
+using System.Text.RegularExpressions;
 
- namespace RPQ
+namespace RPQ
 {
     public class Task : IComparable<Task>
     {
-        public int ReadyTime { get; }
-        public int PerformTime { get; }
-        public int QuitTime { get; }
-
         public Task(int readyTime, int performTime, int quitTime)
         {
             ReadyTime = readyTime;
             PerformTime = performTime;
             QuitTime = quitTime;
+        }
+
+        public int ReadyTime { get; }
+        public int PerformTime { get; }
+        public int QuitTime { get; }
+
+        public int CompareTo(Task other)
+        {
+            if (ReferenceEquals(this, other)) return 0;
+            if (ReferenceEquals(null, other)) return 1;
+            int readyTimeComparison = ReadyTime.CompareTo(other.ReadyTime);
+            if (readyTimeComparison != 0) return readyTimeComparison;
+            return QuitTime.CompareTo(other.QuitTime);
         }
 
         public static Task Parse(string taskString)
@@ -36,7 +45,7 @@
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((Task)obj);
+            return Equals((Task) obj);
         }
 
         public override int GetHashCode()
@@ -48,15 +57,6 @@
                 hashCode = (hashCode * 397) ^ QuitTime;
                 return hashCode;
             }
-        }
-
-        public int CompareTo(Task other)
-        {
-            if (ReferenceEquals(this, other)) return 0;
-            if (ReferenceEquals(null, other)) return 1;
-            int readyTimeComparison = ReadyTime.CompareTo(other.ReadyTime);
-            if (readyTimeComparison != 0) return readyTimeComparison;
-            return QuitTime.CompareTo(other.QuitTime);
         }
     }
 }
