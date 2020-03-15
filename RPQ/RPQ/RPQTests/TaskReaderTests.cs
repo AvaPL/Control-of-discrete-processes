@@ -1,4 +1,4 @@
-﻿﻿using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
@@ -9,9 +9,6 @@ namespace RpqTests
     [TestFixture]
     public class TaskReaderTests
     {
-        private const string Filepath = @"../../Data/data10.txt";
-        private StreamReader fileReader;
-
         [SetUp]
         public void SetUp()
         {
@@ -23,6 +20,9 @@ namespace RpqTests
         {
             fileReader.Close();
         }
+
+        private const string Filepath = @"../../Data/data10.txt";
+        private StreamReader fileReader;
 
         [Test]
         public void ShouldFindDataFile()

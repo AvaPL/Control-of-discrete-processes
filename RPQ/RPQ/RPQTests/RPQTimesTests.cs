@@ -1,17 +1,17 @@
-﻿﻿using System;
- using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using RPQ;
 using System.Collections.Generic;
- using System.Diagnostics;
- using System.IO;
- using System.Linq;
+using System.Diagnostics;
+using System.IO;
 
- namespace RpqTests
+namespace RpqTests
 {
     [TestFixture]
     public class RPQTimesTests
     {
-        private static readonly string[] FilePaths = {
+        private static readonly string[] FilePaths =
+        {
             @"../../Data/data10.txt",
             @"../../Data/data20.txt",
             @"../../Data/data50.txt",
@@ -20,7 +20,8 @@ using System.Collections.Generic;
             @"../../Data/data500.txt"
         };
 
-        private static readonly int[] ExpectedUnsortedResults = {
+        private static readonly int[] ExpectedUnsortedResults =
+        {
             927,
             1905,
             2843,
@@ -29,7 +30,8 @@ using System.Collections.Generic;
             26706
         };
 
-        private static readonly int[] ExpectedSortedResults = {
+        private static readonly int[] ExpectedSortedResults =
+        {
             746,
             1594,
             1915,
@@ -37,18 +39,53 @@ using System.Collections.Generic;
             8210,
             19609
         };
-        
+
+        private static void Sort(List<Task> tasks)
+        {
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            tasks.Sort();
+            stopwatch.Stop();
+            Console.Out.WriteLine(stopwatch.Elapsed);
+        }
+
         [Test]
         public void ShouldGiveCorrectMaxQuitTimeForSingleTask()
         {
             List<Task> tasks = new List<Task>
             {
-                new Task (10,10,10)
+                new Task(10, 10, 10)
             };
-            RPQTimes rpqTimes =  RPQTimes.Calculate(tasks);
+            RPQTimes rpqTimes = RPQTimes.Calculate(tasks);
             Assert.AreEqual(30, rpqTimes.GetMaxQuitTime());
         }
-        
+
+        [Test]
+        public void ShouldGiveCorrectMaxQuitTimeForTasksFromFile()
+        {
+            for (int i = 0; i < FilePaths.Length; i++)
+            {
+                StreamReader fileReader = new StreamReader(FilePaths[i]);
+                TaskReader taskReader = new TaskReader();
+                List<Task> tasks = taskReader.ReadTasksFromFile(fileReader);
+                RPQTimes rpqTimes = RPQTimes.Calculate(tasks);
+                Assert.AreEqual(ExpectedUnsortedResults[i], rpqTimes.GetMaxQuitTime());
+            }
+        }
+
+        [Test]
+        public void ShouldGiveCorrectMaxQuitTimeForTasksSortedByReadyTime()
+        {
+            for (int i = 0; i < FilePaths.Length; i++)
+            {
+                StreamReader fileReader = new StreamReader(FilePaths[i]);
+                TaskReader taskReader = new TaskReader();
+                List<Task> tasks = taskReader.ReadTasksFromFile(fileReader);
+                Sort(tasks);
+                RPQTimes rpqTimes = RPQTimes.Calculate(tasks);
+                Assert.AreEqual(ExpectedSortedResults[i], rpqTimes.GetMaxQuitTime());
+            }
+        }
+
         [Test]
         public void ShouldGiveCorrectMaxQuitTimeForTwoTasks()
         {
@@ -62,8 +99,8 @@ using System.Collections.Generic;
             */
             List<Task> tasks = new List<Task>
             {
-                new Task (1,5,1),
-                new Task (9,4,3)
+                new Task(1, 5, 1),
+                new Task(9, 4, 3)
             };
             RPQTimes rpqTimes = RPQTimes.Calculate(tasks);
             Assert.AreEqual(16, rpqTimes.GetMaxQuitTime());
@@ -82,46 +119,11 @@ using System.Collections.Generic;
             */
             List<Task> tasks = new List<Task>
             {
-                new Task (1,5,11),
-                new Task (1,4,3)
+                new Task(1, 5, 11),
+                new Task(1, 4, 3)
             };
             RPQTimes rpqTimes = RPQTimes.Calculate(tasks);
             Assert.AreEqual(17, rpqTimes.GetMaxQuitTime());
-        }
-
-        [Test]
-        public void ShouldGiveCorrectMaxQuitTimeForTasksFromFile()
-        {
-            for (int i = 0; i < FilePaths.Length; i++)
-            {
-                StreamReader fileReader = new StreamReader(FilePaths[i]);
-                TaskReader taskReader = new TaskReader();
-                List<Task> tasks = taskReader.ReadTasksFromFile(fileReader);
-                RPQTimes rpqTimes = RPQTimes.Calculate(tasks);
-                Assert.AreEqual(ExpectedUnsortedResults[i], rpqTimes.GetMaxQuitTime());
-            } 
-        }
-        
-        [Test]
-        public void ShouldGiveCorrectMaxQuitTimeForTasksSortedByReadyTime()
-        {
-            for (int i = 0; i < FilePaths.Length; i++)
-            {
-                StreamReader fileReader = new StreamReader(FilePaths[i]);
-                TaskReader taskReader = new TaskReader();
-                List<Task> tasks = taskReader.ReadTasksFromFile(fileReader);
-                Sort(tasks);
-                RPQTimes rpqTimes = RPQTimes.Calculate(tasks);
-                Assert.AreEqual(ExpectedSortedResults[i], rpqTimes.GetMaxQuitTime());
-            } 
-        }
-
-        private static void Sort(List<Task> tasks)
-        {
-            Stopwatch stopwatch = Stopwatch.StartNew();
-            tasks.Sort();
-            stopwatch.Stop();
-            Console.Out.WriteLine(stopwatch.Elapsed);
         }
     }
 }

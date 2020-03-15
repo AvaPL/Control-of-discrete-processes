@@ -1,4 +1,4 @@
-﻿﻿namespace RPQ
+﻿namespace RPQ
 {
     internal class Program
     {

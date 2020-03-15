@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,16 +6,16 @@ namespace RPQ
 {
     public class RPQTimes
     {
-        public int[] StartTimes { get; }
-        public int[] CompleteTimes { get; }
-        public int[] QuitTimes { get; }
-
         private RPQTimes(int numberOfTasks)
         {
             StartTimes = new int[numberOfTasks];
             CompleteTimes = new int[numberOfTasks];
             QuitTimes = new int[numberOfTasks];
         }
+
+        public int[] StartTimes { get; }
+        public int[] CompleteTimes { get; }
+        public int[] QuitTimes { get; }
 
         public static RPQTimes Calculate(List<Task> tasks)
         {

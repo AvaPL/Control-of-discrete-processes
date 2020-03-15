@@ -1,4 +1,4 @@
-﻿﻿using NUnit.Framework;
+﻿using NUnit.Framework;
 using RPQ;
 
 namespace RpqTests
@@ -7,7 +7,7 @@ namespace RpqTests
     public class TaskTests
     {
         [Test]
-        public void ShouldParseTask ()
+        public void ShouldParseTask()
         {
             string stringTask = "10 10 10";
             Task task = new Task(10, 10, 10);
