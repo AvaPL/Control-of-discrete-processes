@@ -15,7 +15,7 @@ namespace RPQ
         }
 
         public int ReadyTime { get; }
-        public int PerformTime { get; }
+        public int PerformTime { get; set; }
         public int QuitTime { get; }
         
 
