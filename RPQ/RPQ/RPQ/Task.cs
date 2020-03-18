@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -16,6 +17,7 @@ namespace RPQ
         public int ReadyTime { get; }
         public int PerformTime { get; }
         public int QuitTime { get; }
+        
 
         public int CompareTo(Task other)
         {

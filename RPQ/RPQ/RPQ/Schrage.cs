@@ -1,46 +1,69 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using MoreLinq;
+using Priority_Queue;
 
 namespace RPQ
 {
     public class Schrage
     {
-        public static List<Task> Solve(List<Task> unorderedTasks)
+        private readonly List<Task> orderedTasks = new List<Task>();
+        private readonly SimplePriorityQueue<Task, int> readyTasksQueue = new SimplePriorityQueue<Task, int>();
+        private readonly SimplePriorityQueue<Task, int> unorderedTasksQueue;
+        private int time;
+
+        public Schrage(List<Task> unorderedTasks)
         {
-            List<Task> readyTasks = new List<Task>();
-            List<Task> orderedTasks = new List<Task>(unorderedTasks.Count);
-            int time = MinReadyTime(unorderedTasks);
-
-            while (readyTasks.Count > 0 || unorderedTasks.Count > 0)
-            {
-                Task task;
-                while (unorderedTasks.Count > 0 && MinReadyTime(unorderedTasks) <= time)
-                {
-                    task = unorderedTasks.MinBy(t =>t.ReadyTime).First();
-                    readyTasks.Add(task);
-                    unorderedTasks.Remove(task); // TODO: optimize
-                }
-
-                if (readyTasks.Count > 0)
-                {
-                    task = readyTasks.MaxBy(t => t.QuitTime).First();
-                    readyTasks.Remove(task);
-                    orderedTasks.Add(task);
-                    time += task.PerformTime;
-                }
-                else
-                {
-                    time = MinReadyTime(unorderedTasks);
-                }
-            }
-
-            return orderedTasks;
+            unorderedTasksQueue = CreateUnorderedTasksQueue(unorderedTasks);
+            time = unorderedTasksQueue.First.ReadyTime;
         }
 
-        private static int MinReadyTime(List<Task> unorderedTasks)
+        private static SimplePriorityQueue<Task, int> CreateUnorderedTasksQueue(List<Task> unorderedTasks)
         {
-            return unorderedTasks.Min(t => t.ReadyTime);
+            SimplePriorityQueue<Task, int> unorderedTasksQueue = new SimplePriorityQueue<Task, int>();
+            foreach (var task in unorderedTasks)
+                unorderedTasksQueue.Enqueue(task, task.ReadyTime);
+            return unorderedTasksQueue;
+        }
+
+        public static List<Task> Solve(List<Task> unorderedTasks)
+        {
+            Schrage schrage = new Schrage(unorderedTasks);
+            OrderTasks(schrage);
+            return schrage.orderedTasks;
+        }
+
+        private static void OrderTasks(Schrage schrage)
+        {
+            while (schrage.readyTasksQueue.Count > 0 || schrage.unorderedTasksQueue.Count > 0)
+            {
+                EnqueueReadyTasks(schrage);
+                ProcessReadyTask(schrage);
+            }
+        }
+
+        private static void EnqueueReadyTasks(Schrage schrage)
+        {
+            while (schrage.unorderedTasksQueue.Count > 0 && schrage.unorderedTasksQueue.First.ReadyTime <= schrage.time)
+            {
+                Task task = schrage.unorderedTasksQueue.Dequeue();
+                schrage.readyTasksQueue.Enqueue(task, -task.QuitTime);
+            }
+        }
+
+        private static void ProcessReadyTask(Schrage schrage)
+        {
+            if (schrage.readyTasksQueue.Count > 0)
+                AddOrderedTask(schrage);
+            else
+                schrage.time = schrage.unorderedTasksQueue.First.ReadyTime;
+        }
+
+        private static void AddOrderedTask(Schrage schrage)
+        {
+            Task task = schrage.readyTasksQueue.Dequeue();
+            schrage.orderedTasks.Add(task);
+            schrage.time += task.PerformTime;
         }
     }
 }
