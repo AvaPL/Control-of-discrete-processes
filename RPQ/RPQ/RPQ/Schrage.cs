@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using MoreLinq;
+using Priority_Queue;
 
 namespace RPQ
 {
@@ -8,30 +10,42 @@ namespace RPQ
     {
         public static List<Task> Solve(List<Task> unorderedTasks)
         {
-            List<Task> readyTasks = new List<Task>();
-            List<Task> orderedTasks = new List<Task>(unorderedTasks.Count);
-            int time = MinReadyTime(unorderedTasks);
+            SimplePriorityQueue<Task, int> unorderedTasksQueue = new SimplePriorityQueue<Task, int>();
+            foreach (var task in unorderedTasks)
+            {
+                unorderedTasksQueue.Enqueue(task, task.ReadyTime);
+            }
 
-            while (readyTasks.Count > 0 || unorderedTasks.Count > 0)
+            //List<Task> readyTasks = new List<Task>();
+            SimplePriorityQueue<Task, int> readyTasksQueue = new SimplePriorityQueue<Task, int>();
+            List<Task> orderedTasks = new List<Task>(unorderedTasks.Count);
+            //int time = MinReadyTime(unorderedTasks);
+            int time = unorderedTasksQueue.First.ReadyTime;
+
+            while (readyTasksQueue.Count > 0 || unorderedTasksQueue.Count > 0)
             {
                 Task task;
-                while (unorderedTasks.Count > 0 && MinReadyTime(unorderedTasks) <= time)
+                while (unorderedTasksQueue.Count > 0 && unorderedTasksQueue.First.ReadyTime <= time)
                 {
-                    task = unorderedTasks.MinBy(t =>t.ReadyTime).First();
-                    readyTasks.Add(task);
-                    unorderedTasks.Remove(task); // TODO: optimize
+                    //task = unorderedTasks.MinBy(t =>t.ReadyTime).First();
+                    task = unorderedTasksQueue.Dequeue();
+                    //readyTasks.Add(task);
+                    readyTasksQueue.Enqueue(task, -task.QuitTime);
+                    //unorderedTasks.Remove(task);
                 }
 
-                if (readyTasks.Count > 0)
+                if (readyTasksQueue.Count > 0)
                 {
-                    task = readyTasks.MaxBy(t => t.QuitTime).First();
-                    readyTasks.Remove(task);
+                    //task = readyTasksQueue.MaxBy(t => t.QuitTime).First();
+                    task = readyTasksQueue.Dequeue();
+                    //readyTasksQueue.Remove(task);
                     orderedTasks.Add(task);
                     time += task.PerformTime;
                 }
                 else
                 {
-                    time = MinReadyTime(unorderedTasks);
+                    //time = MinReadyTime(unorderedTasks);
+                    time = unorderedTasksQueue.First.ReadyTime;
                 }
             }
 
