@@ -64,7 +64,7 @@ namespace RpqTests
         {
             for (int i = 0; i < FilePaths.Length; i++)
             {
-                StreamReader fileReader = new StreamReader(FilePaths[i]);
+                using StreamReader fileReader = new StreamReader(FilePaths[i]);
                 TaskReader taskReader = new TaskReader();
                 List<Task> tasks = taskReader.ReadTasksFromFile(fileReader);
                 RPQTimes rpqTimes = RPQTimes.Calculate(tasks);
@@ -77,7 +77,7 @@ namespace RpqTests
         {
             for (int i = 0; i < FilePaths.Length; i++)
             {
-                StreamReader fileReader = new StreamReader(FilePaths[i]);
+                using StreamReader fileReader = new StreamReader(FilePaths[i]);
                 TaskReader taskReader = new TaskReader();
                 List<Task> tasks = taskReader.ReadTasksFromFile(fileReader);
                 Sort(tasks);
