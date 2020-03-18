@@ -24,7 +24,7 @@ namespace RPQ
 
                 if (readyTasks.Count > 0)
                 {
-                    task = readyTasks.MinBy(t => t.QuitTime).First();
+                    task = readyTasks.MaxBy(t => t.QuitTime).First();
                     readyTasks.Remove(task);
                     orderedTasks.Add(task);
                     time += task.PerformTime;

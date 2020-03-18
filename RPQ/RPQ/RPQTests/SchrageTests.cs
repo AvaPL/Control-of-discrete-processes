@@ -21,11 +21,11 @@ namespace RpqTests
         private static readonly int[] ExpectedResults =
         {
             687,
-            1309,
-            1514,
+            1299,
+            1513,
             3076,
             6416,
-            14786
+            14822
         };
 
         [Test]
