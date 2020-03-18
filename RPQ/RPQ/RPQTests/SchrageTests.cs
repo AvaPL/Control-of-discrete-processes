@@ -50,7 +50,6 @@ namespace RpqTests
             TaskReader taskReader = new TaskReader();
             List<Task> tasks = taskReader.ReadTasksFromFile(fileReader);
             List<Task> expectedTasks = new List<Task>() {new Task(84, 13, 103), new Task(219, 5, 276)};
-
             Assert.AreEqual(expectedTasks, Schrage.Solve(tasks));
         }
 
@@ -76,9 +75,8 @@ namespace RpqTests
                 using StreamReader fileReader = new StreamReader(FilePathsWithInterrupts[i]);
                 TaskReader taskReader = new TaskReader();
                 List<Task> unorderedTasks = taskReader.ReadTasksFromFile(fileReader);
-                List<Task> orderedTasks = InterruptedSchrage.Solve(unorderedTasks);
-                RPQTimes rpqTimes = RPQTimes.Calculate(orderedTasks);
-                Assert.AreEqual(ExpectedResultsWithInterrupts[i], rpqTimes.GetMaxQuitTime());
+                int result = InterruptedSchrage.Solve(unorderedTasks);
+                Assert.AreEqual(ExpectedResultsWithInterrupts[i], result);
             }
         }
     }

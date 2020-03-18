@@ -1,15 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Priority_Queue;
 
 namespace RPQ
 {
     public class InterruptedSchrage
     {
-        private readonly List<Task> orderedTasks = new List<Task>();
         private readonly SimplePriorityQueue<Task, int> readyTasksQueue = new SimplePriorityQueue<Task, int>();
         private readonly SimplePriorityQueue<Task, int> unorderedTasksQueue;
         private Task lastTask;
         private int time;
+        private int maxQuitTime = 0;
 
         public InterruptedSchrage(List<Task> unorderedTasks)
         {
@@ -25,11 +26,11 @@ namespace RPQ
             return unorderedTasksQueue;
         }
 
-        public static List<Task> Solve(List<Task> unorderedTasks)
+        public static int Solve(List<Task> unorderedTasks)
         {
             InterruptedSchrage schrage = new InterruptedSchrage(unorderedTasks);
             OrderTasks(schrage);
-            return schrage.orderedTasks;
+            return schrage.maxQuitTime;
         }
 
         private static void OrderTasks(InterruptedSchrage schrage)
@@ -47,16 +48,22 @@ namespace RPQ
             {
                 Task task = schrage.unorderedTasksQueue.Dequeue();
                 schrage.readyTasksQueue.Enqueue(task, -task.QuitTime);
-                if (schrage.lastTask != null && task.QuitTime > schrage.lastTask.QuitTime)
-                {
-                    schrage.lastTask.PerformTime = schrage.time - task.ReadyTime;
-                    schrage.time = task.ReadyTime;
-                    if (schrage.lastTask.PerformTime > 0)
-                    {
-                        schrage.readyTasksQueue.Enqueue(schrage.lastTask, -schrage.lastTask.QuitTime);
-                    }
-                }
+                InterruptIfNeeded(schrage, task);
             }
+        }
+
+        private static void InterruptIfNeeded(InterruptedSchrage schrage, Task task)
+        {
+            if (schrage.lastTask != null && task.QuitTime > schrage.lastTask.QuitTime) 
+                InterruptTask(schrage, task);
+        }
+
+        private static void InterruptTask(InterruptedSchrage schrage, Task task)
+        {
+            schrage.lastTask.PerformTime = schrage.time - task.ReadyTime;
+            schrage.time = task.ReadyTime;
+            if (schrage.lastTask.PerformTime > 0)
+                schrage.readyTasksQueue.Enqueue(schrage.lastTask, -schrage.lastTask.QuitTime);
         }
 
         private static void ProcessReadyTask(InterruptedSchrage schrage)
@@ -70,9 +77,9 @@ namespace RPQ
         private static void AddOrderedTask(InterruptedSchrage schrage)
         {
             Task task = schrage.readyTasksQueue.Dequeue();
-            schrage.orderedTasks.Add(task);
             schrage.time += task.PerformTime;
             schrage.lastTask = task;
+            schrage.maxQuitTime = Math.Max(schrage.maxQuitTime, schrage.time + task.QuitTime);
         }
     }
 }
