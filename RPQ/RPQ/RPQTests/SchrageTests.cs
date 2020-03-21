@@ -10,19 +10,19 @@ namespace RpqTests
     {
         private static readonly string[] FilePaths =
         {
-            @"../../Data/data10.txt",
-            @"../../Data/data20.txt",
-            @"../../Data/data50.txt",
-            @"../../Data/data100.txt",
-            @"../../Data/data200.txt",
-            @"../../Data/data500.txt"
+            @"../../../Data/data10.txt",
+            @"../../../Data/data20.txt",
+            @"../../../Data/data50.txt",
+            @"../../../Data/data100.txt",
+            @"../../../Data/data200.txt",
+            @"../../../Data/data500.txt"
         };
         
         private static readonly string[] FilePathsWithInterrupts =
         {
-            @"../../Data/data50.txt",
-            @"../../Data/data100.txt",
-            @"../../Data/data200.txt"
+            @"../../../Data/data50.txt",
+            @"../../../Data/data100.txt",
+            @"../../../Data/data200.txt"
         };
 
         private static readonly int[] ExpectedResults =
@@ -45,7 +45,7 @@ namespace RpqTests
         [Test]
         public void ShouldGiveTheRightOrderForTwoTasks()
         {
-            string filepath = @"../../Data/data2.txt";
+            string filepath = @"../../../Data/data2.txt";
             using StreamReader fileReader = new StreamReader(filepath);
             TaskReader taskReader = new TaskReader();
             List<Task> tasks = taskReader.ReadTasksFromFile(fileReader);

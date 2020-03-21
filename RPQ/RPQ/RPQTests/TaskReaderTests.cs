@@ -21,7 +21,7 @@ namespace RpqTests
             fileReader.Close();
         }
 
-        private const string Filepath = @"../../Data/data10.txt";
+        private const string Filepath = @"../../../Data/data10.txt";
         private StreamReader fileReader;
 
         [Test]
