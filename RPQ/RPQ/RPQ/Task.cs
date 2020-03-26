@@ -14,10 +14,10 @@ namespace RPQ
             QuitTime = quitTime;
         }
 
-        public int ReadyTime { get; }
+        public int ReadyTime { get; set; }
         public int PerformTime { get; set; }
-        public int QuitTime { get; }
-        
+        public int QuitTime { get; set; }
+
 
         public int CompareTo(Task other)
         {

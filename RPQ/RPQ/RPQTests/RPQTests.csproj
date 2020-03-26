@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CarlierTests.cs" />
     <Compile Include="RPQTimesTests.cs" />
     <Compile Include="SchrageTests.cs" />
     <Compile Include="SchrageWithQueueTests.cs" />
