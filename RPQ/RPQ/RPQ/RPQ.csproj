@@ -33,6 +33,10 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <ItemGroup>
+        <Reference Include="MoreLinq, Version=3.3.2.0, Culture=neutral, PublicKeyToken=384d532d7e88985d">
+          <HintPath>..\packages\morelinq.3.3.2\lib\net451\MoreLinq.dll</HintPath>
+          <Private>True</Private>
+        </Reference>
         <Reference Include="mscorlib" />
         <Reference Include="Priority Queue, Version=4.2.0.0, Culture=neutral, PublicKeyToken=null">
           <HintPath>..\packages\OptimizedPriorityQueue.4.2.0\lib\net45\Priority Queue.dll</HintPath>
@@ -50,10 +54,12 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="InterruptedSchrage.cs" />
+        <Compile Include="InterruptedSchrageWithQueue.cs" />
         <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
         <Compile Include="RPQTimes.cs" />
         <Compile Include="Schrage.cs" />
+        <Compile Include="SchrageWithQueue.cs" />
         <Compile Include="Task.cs" />
         <Compile Include="TaskReader.cs" />
     </ItemGroup>
