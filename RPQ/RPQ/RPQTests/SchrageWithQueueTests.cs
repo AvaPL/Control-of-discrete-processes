@@ -75,7 +75,7 @@ namespace RpqTests
                 using StreamReader fileReader = new StreamReader(FilePathsWithInterrupts[i]);
                 TaskReader taskReader = new TaskReader();
                 List<Task> unorderedTasks = taskReader.ReadTasksFromFile(fileReader);
-                int result = InterruptedSchrage.Solve(unorderedTasks);
+                int result = InterruptedSchrageWithQueue.Solve(unorderedTasks);
                 Assert.AreEqual(ExpectedResultsWithInterrupts[i], result);
             }
         }

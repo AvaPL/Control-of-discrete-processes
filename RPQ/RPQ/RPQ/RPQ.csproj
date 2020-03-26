@@ -54,6 +54,7 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="InterruptedSchrage.cs" />
+        <Compile Include="InterruptedSchrageWithQueue.cs" />
         <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
         <Compile Include="RPQTimes.cs" />

@@ -19,7 +19,7 @@ namespace RPQ
                 {
                     task = unorderedTasks.MinBy(t =>t.ReadyTime).First();
                     readyTasks.Add(task);
-                    unorderedTasks.Remove(task); // TODO: optimize
+                    unorderedTasks.Remove(task);
                 }
 
                 if (readyTasks.Count > 0)
