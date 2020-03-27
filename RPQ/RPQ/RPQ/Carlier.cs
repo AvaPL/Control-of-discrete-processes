@@ -7,10 +7,15 @@ namespace RPQ
 {
     public class Carlier
     {
-        private static List<Task> optimalOrder;
-        private static int? upperBound;
+        private List<Task> optimalOrder;
+        private int? upperBound;
 
         public static List<Task> Solve(List<Task> unorderedTasks)
+        {
+            return new Carlier().GetOptimalOrder(unorderedTasks);
+        }
+
+        private List<Task> GetOptimalOrder(List<Task> unorderedTasks)
         {
             List<Task> schrageTasks = SchrageWithQueue.Solve(unorderedTasks);
             RPQTimes rpqTimes = RPQTimes.Calculate(schrageTasks);
@@ -39,7 +44,7 @@ namespace RPQ
                 oldTask.PerformTime, oldTask.QuitTime);
             int lowerBound = InterruptedSchrage.Solve(schrageTasks);
             if (lowerBound < upperBound)
-                Solve(schrageTasks);
+                GetOptimalOrder(schrageTasks);
             schrageTasks[currentTaskIndex.Value] = oldTask;
 
             oldTask = schrageTasks[currentTaskIndex.Value];
@@ -47,7 +52,7 @@ namespace RPQ
                 Math.Max(oldTask.QuitTime, minQuitTime + sumPerformTime));
             lowerBound = InterruptedSchrage.Solve(schrageTasks);
             if (lowerBound < upperBound)
-                Solve(schrageTasks);
+                GetOptimalOrder(schrageTasks);
             schrageTasks[currentTaskIndex.Value] = oldTask;
 
             return optimalOrder;
@@ -77,7 +82,7 @@ namespace RPQ
                 t.task.QuitTime < schrageTasks[lastCriticalTaskIndex].QuitTime).Select(t => (int?) t.i).Max();
         }
 
-        private static void UpdateOptimalOrderAndUpperBound(List<Task> schrageTasks, int maxQuitTime)
+        private void UpdateOptimalOrderAndUpperBound(List<Task> schrageTasks, int maxQuitTime)
         {
             upperBound = maxQuitTime;
             optimalOrder = schrageTasks;
