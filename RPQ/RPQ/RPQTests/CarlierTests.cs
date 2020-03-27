@@ -33,7 +33,7 @@ namespace RpqTests
         [Test]
         public void ShouldGiveCorrectMaxQuitTimeFor200Tasks()
         {
-            ShouldGiveCorrectMaxQuitTime(@"../../../Data/data200.txt", 5776);
+            ShouldGiveCorrectMaxQuitTime(@"../../../Data/data200.txt", 6398);
         }
 
         [Test]

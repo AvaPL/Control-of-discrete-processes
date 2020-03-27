@@ -10,7 +10,7 @@ namespace RPQ
         private readonly SimplePriorityQueue<Task, int> unorderedTasksQueue;
         private Task lastTask;
         private int time;
-        private int maxQuitTime = 0;
+        private int maxQuitTime;
 
         private InterruptedSchrageWithQueue(List<Task> unorderedTasks)
         {
