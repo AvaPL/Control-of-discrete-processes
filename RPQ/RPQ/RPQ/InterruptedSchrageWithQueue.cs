@@ -10,7 +10,7 @@ namespace RPQ
         private readonly SimplePriorityQueue<Task, int> unorderedTasksQueue;
         private Task lastTask;
         private int time;
-        private int maxQuitTime = 0;
+        private int maxQuitTime;
 
         private InterruptedSchrageWithQueue(List<Task> unorderedTasks)
         {
@@ -28,7 +28,8 @@ namespace RPQ
 
         public static int Solve(List<Task> unorderedTasks)
         {
-            InterruptedSchrageWithQueue schrageWithQueue = new InterruptedSchrageWithQueue(unorderedTasks);
+            List<Task> unorderedTasksCopy = new List<Task>(unorderedTasks);
+            InterruptedSchrageWithQueue schrageWithQueue = new InterruptedSchrageWithQueue(unorderedTasksCopy);
             schrageWithQueue.OrderTasks();
             return schrageWithQueue.maxQuitTime;
         }
@@ -60,10 +61,10 @@ namespace RPQ
 
         private void InterruptTask(Task task)
         {
-            lastTask.PerformTime = time - task.ReadyTime;
+            Task modifiedTask = new Task(lastTask.ReadyTime, time - task.ReadyTime, lastTask.QuitTime);
             time = task.ReadyTime;
-            if (lastTask.PerformTime > 0)
-                readyTasksQueue.Enqueue(lastTask, -lastTask.QuitTime);
+            if (modifiedTask.PerformTime > 0)
+                readyTasksQueue.Enqueue(modifiedTask, -modifiedTask.QuitTime);
         }
 
         private void ProcessReadyTask()

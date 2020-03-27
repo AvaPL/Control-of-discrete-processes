@@ -9,26 +9,27 @@ namespace RPQ
     {
         public static int Solve(List<Task> unorderedTasks)
         {
+            List<Task> unorderedTasksCopy = new List<Task>(unorderedTasks);
             List<Task> readyTasks = new List<Task>();
-            List<Task> orderedTasks = new List<Task>(unorderedTasks.Count);
-            int time = MinReadyTime(unorderedTasks);
+            List<Task> orderedTasks = new List<Task>(unorderedTasksCopy.Count);
+            int time = MinReadyTime(unorderedTasksCopy);
             int maxQuitTime = 0;
             Task lastTask = null;
 
-            while (readyTasks.Count > 0 || unorderedTasks.Count > 0)
+            while (readyTasks.Count > 0 || unorderedTasksCopy.Count > 0)
             {
                 Task task;
-                while (unorderedTasks.Count > 0 && MinReadyTime(unorderedTasks) <= time)
+                while (unorderedTasksCopy.Count > 0 && MinReadyTime(unorderedTasksCopy) <= time)
                 {
-                    task = unorderedTasks.MinBy(t => t.ReadyTime).First();
+                    task = unorderedTasksCopy.MinBy(t => t.ReadyTime).First();
                     readyTasks.Add(task);
-                    unorderedTasks.Remove(task);
+                    unorderedTasksCopy.Remove(task);
                     if (lastTask != null && task.QuitTime > lastTask.QuitTime)
                     {
-                        lastTask.PerformTime = time - task.ReadyTime;
+                        Task modifiedTask = new Task(lastTask.ReadyTime, time - task.ReadyTime, lastTask.QuitTime);
                         time = task.ReadyTime;
-                        if (lastTask.PerformTime > 0)
-                            readyTasks.Add(lastTask);
+                        if (modifiedTask.PerformTime > 0)
+                            readyTasks.Add(modifiedTask);
                     }
                 }
 
@@ -43,7 +44,7 @@ namespace RPQ
                 }
                 else
                 {
-                    time = MinReadyTime(unorderedTasks);
+                    time = MinReadyTime(unorderedTasksCopy);
                 }
             }
 

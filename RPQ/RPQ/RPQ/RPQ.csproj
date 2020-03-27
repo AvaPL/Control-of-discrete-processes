@@ -53,6 +53,7 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="Carlier.cs" />
         <Compile Include="InterruptedSchrage.cs" />
         <Compile Include="InterruptedSchrageWithQueue.cs" />
         <Compile Include="Program.cs" />

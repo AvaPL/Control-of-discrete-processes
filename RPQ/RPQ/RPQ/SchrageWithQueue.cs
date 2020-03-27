@@ -42,7 +42,8 @@ namespace RPQ
 
         private static void EnqueueReadyTasks(SchrageWithQueue schrageWithQueue)
         {
-            while (schrageWithQueue.unorderedTasksQueue.Count > 0 && schrageWithQueue.unorderedTasksQueue.First.ReadyTime <= schrageWithQueue.time)
+            while (schrageWithQueue.unorderedTasksQueue.Count > 0 &&
+                   schrageWithQueue.unorderedTasksQueue.First.ReadyTime <= schrageWithQueue.time)
             {
                 Task task = schrageWithQueue.unorderedTasksQueue.Dequeue();
                 schrageWithQueue.readyTasksQueue.Enqueue(task, -task.QuitTime);
