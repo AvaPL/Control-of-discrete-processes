@@ -21,5 +21,32 @@ namespace WiTi
 
             return result;
         }
+        
+        // public static WiTiTimes SolveUsingRecursion(List<Task> tasks)
+        // {
+        //     WiTiTimes result = new WiTiTimes(tasks);
+        //     foreach (var task in tasks)
+        //     {
+        //         LinkedList<Task> tasksCopy = new LinkedList<Task>(tasks);
+        //         WiTiTimes wiTiTimes = new WiTiTimes(tasks.Count);
+        //         tasksCopy.Remove(task);
+        //         wiTiTimes.AddTask(task);
+        //         WiTiTimes wiTiTimesFromRecursion = SolveUsingRecursion(tasksCopy, wiTiTimes);
+        //         if (result.TotalWeightedTardiness > wiTiTimesFromRecursion.TotalWeightedTardiness)
+        //             result = wiTiTimes;
+        //     }     
+        // }
+        //
+        // public static WiTiTimes SolveUsingRecursion(LinkedList<Task> tasks, WiTiTimes wiTiTimes)
+        // {
+        //     foreach (var task in tasks)
+        //     {
+        //         LinkedList<Task> tasksCopy = new LinkedList<Task>(tasks);
+        //         WiTiTimes wiTiTimesCopy = new WiTiTimes(wiTiTimes);
+        //         tasksCopy.Remove(task);
+        //         wiTiTimes.AddTask(task);
+        //         SolveUsingRecursion(tasksCopy, wiTiTimesCopy);
+        //     }
+        // }
     }
 }
