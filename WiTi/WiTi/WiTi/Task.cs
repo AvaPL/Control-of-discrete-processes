@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -56,7 +57,9 @@ namespace WiTi
             if (ReferenceEquals(null, other)) return 1;
             int deadlineComparison = Deadline.CompareTo(other.Deadline);
             if (deadlineComparison != 0) return deadlineComparison;
-            return PenaltyWeight.CompareTo(other.PenaltyWeight);
+            int penaltyWeightComparison = PenaltyWeight.CompareTo(other.PenaltyWeight);
+            if (penaltyWeightComparison != 0) return penaltyWeightComparison;
+            return PerformTime.CompareTo(other.PerformTime);
         }
     }
 }

@@ -62,8 +62,8 @@ namespace WiTiTests
             {
                 new Task(10, 10, 5)
             };
-            WiTiTimes wiTiTimes = WiTiTimes.Calculate(tasks);
-            Assert.AreEqual(50, wiTiTimes.GetTotalWeightedTardiness());
+            WiTiTimes wiTiTimes = new WiTiTimes(tasks);
+            Assert.AreEqual(50, wiTiTimes.TotalWeightedTardiness);
         }
 
         [Test]
@@ -74,8 +74,8 @@ namespace WiTiTests
                 using StreamReader fileReader = new StreamReader(FilePaths[i]);
                 TaskReader taskReader = new TaskReader();
                 List<Task> tasks = taskReader.ReadTasksFromFile(fileReader);
-                WiTiTimes wiTiTimes = WiTiTimes.Calculate(tasks);
-                Assert.AreEqual(ExpectedUnsortedResults[i], wiTiTimes.GetTotalWeightedTardiness());
+                WiTiTimes wiTiTimes = new WiTiTimes(tasks);
+                Assert.AreEqual(ExpectedUnsortedResults[i], wiTiTimes.TotalWeightedTardiness);
             }
         }
 
@@ -88,8 +88,8 @@ namespace WiTiTests
                 TaskReader taskReader = new TaskReader();
                 List<Task> tasks = taskReader.ReadTasksFromFile(fileReader);
                 tasks.Sort();
-                WiTiTimes wiTiTimes = WiTiTimes.Calculate(tasks);
-                Assert.AreEqual(ExpectedSortedResults[i], wiTiTimes.GetTotalWeightedTardiness());
+                WiTiTimes wiTiTimes = new WiTiTimes(tasks);
+                Assert.AreEqual(ExpectedSortedResults[i], wiTiTimes.TotalWeightedTardiness);
             }
         }
 
@@ -109,8 +109,8 @@ namespace WiTiTests
                 new Task(1, 5, 1),
                 new Task(9, 4, 3)
             };
-            WiTiTimes wiTiTimes = WiTiTimes.Calculate(tasks);
-            Assert.AreEqual(28, wiTiTimes.GetTotalWeightedTardiness());
+            WiTiTimes wiTiTimes = new WiTiTimes(tasks);
+            Assert.AreEqual(28, wiTiTimes.TotalWeightedTardiness);
         }
     }
 }
