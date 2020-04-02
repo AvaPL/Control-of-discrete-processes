@@ -14,18 +14,9 @@ namespace WiTi
         }
 
         public int PerformTime { get; }
-        public int PenaltyWeight { get;}
-        public int Deadline { get;}
+        public int PenaltyWeight { get; }
+        public int Deadline { get; }
 
-
-        public int CompareTo(Task other)
-        {
-            if (ReferenceEquals(this, other)) return 0;
-            if (ReferenceEquals(null, other)) return 1;
-            int readyTimeComparison = PerformTime.CompareTo(other.PerformTime);
-            if (readyTimeComparison != 0) return readyTimeComparison;
-            return Deadline.CompareTo(other.Deadline);
-        }
 
         public static Task Parse(string taskString)
         {
@@ -36,9 +27,8 @@ namespace WiTi
 
         protected bool Equals(Task other)
         {
-            return PerformTime == other.PerformTime
-                   && PenaltyWeight == other.PenaltyWeight
-                   && Deadline == other.Deadline;
+            return PerformTime == other.PerformTime && PenaltyWeight == other.PenaltyWeight &&
+                   Deadline == other.Deadline;
         }
 
         public override bool Equals(object obj)
@@ -58,6 +48,15 @@ namespace WiTi
                 hashCode = (hashCode * 397) ^ Deadline;
                 return hashCode;
             }
+        }
+
+        public int CompareTo(Task other)
+        {
+            if (ReferenceEquals(this, other)) return 0;
+            if (ReferenceEquals(null, other)) return 1;
+            int deadlineComparison = Deadline.CompareTo(other.Deadline);
+            if (deadlineComparison != 0) return deadlineComparison;
+            return PenaltyWeight.CompareTo(other.PenaltyWeight);
         }
     }
 }

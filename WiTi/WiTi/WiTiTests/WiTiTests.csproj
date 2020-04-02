@@ -46,6 +46,7 @@
         <Compile Include="TaskReaderTests.cs" />
         <Compile Include="TaskTests.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
+        <Compile Include="WiTiTimesTests.cs" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\WiTi\WiTi.csproj">
