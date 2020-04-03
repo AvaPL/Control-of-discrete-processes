@@ -8,34 +8,23 @@ namespace WiTi
     {
         private int? totalWeightedTardiness;
 
-        public WiTiTimes(List<Task> tasks)
+        public WiTiTimes(IEnumerable<Task> tasks)
         {
-            StartTimes = new List<int>(tasks.Count);
-            CompleteTimes = new List<int>(tasks.Count);
-            WeightedTardiness = new List<int>(tasks.Count);
-            Permutation = tasks;
+            StartTimes = new List<int>();
+            CompleteTimes = new List<int>();
+            WeightedTardiness = new List<int>();
+            Permutation = tasks.ToList();
             foreach (var task in tasks)
                 Add(task);
-
             TotalWeightedTardiness = GetTotalWeightedTardiness();
         }
 
-        public WiTiTimes(int numberOfTasks)
+        public WiTiTimes()
         {
-            StartTimes = new List<int>(numberOfTasks);
-            CompleteTimes = new List<int>(numberOfTasks);
-            WeightedTardiness = new List<int>(numberOfTasks);
-            Permutation = new List<Task>(numberOfTasks);
-            TotalWeightedTardiness = -1;
-        }
-
-        public WiTiTimes(WiTiTimes wiTiTimes)
-        {
-            StartTimes = wiTiTimes.StartTimes;
-            CompleteTimes = wiTiTimes.CompleteTimes;
-            WeightedTardiness = wiTiTimes.WeightedTardiness;
-            TotalWeightedTardiness = wiTiTimes.TotalWeightedTardiness;
-            Permutation = wiTiTimes.Permutation;
+            StartTimes = new List<int>();
+            CompleteTimes = new List<int>();
+            WeightedTardiness = new List<int>();
+            Permutation = new List<Task>();
         }
 
         public List<int> StartTimes { get; }

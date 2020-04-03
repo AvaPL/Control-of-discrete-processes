@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Combinatorics.Collections;
 
 namespace WiTi
@@ -11,8 +10,7 @@ namespace WiTi
             Permutations<Task> permutations = new Permutations<Task>(tasks);
             WiTiTimes result = new WiTiTimes(tasks);
 
-            // ReSharper disable once PossibleInvalidCastExceptionInForeachLoop
-            foreach (List<Task> permutation in permutations)
+            foreach (var permutation in permutations)
             {
                 WiTiTimes wiTiTimes = new WiTiTimes(permutation);
                 if (result.TotalWeightedTardiness > wiTiTimes.TotalWeightedTardiness)
@@ -21,32 +19,21 @@ namespace WiTi
 
             return result;
         }
-        
-        // public static WiTiTimes SolveUsingRecursion(List<Task> tasks)
-        // {
-        //     WiTiTimes result = new WiTiTimes(tasks);
-        //     foreach (var task in tasks)
-        //     {
-        //         LinkedList<Task> tasksCopy = new LinkedList<Task>(tasks);
-        //         WiTiTimes wiTiTimes = new WiTiTimes(tasks.Count);
-        //         tasksCopy.Remove(task);
-        //         wiTiTimes.AddTask(task);
-        //         WiTiTimes wiTiTimesFromRecursion = SolveUsingRecursion(tasksCopy, wiTiTimes);
-        //         if (result.TotalWeightedTardiness > wiTiTimesFromRecursion.TotalWeightedTardiness)
-        //             result = wiTiTimes;
-        //     }     
-        // }
-        //
-        // public static WiTiTimes SolveUsingRecursion(LinkedList<Task> tasks, WiTiTimes wiTiTimes)
-        // {
-        //     foreach (var task in tasks)
-        //     {
-        //         LinkedList<Task> tasksCopy = new LinkedList<Task>(tasks);
-        //         WiTiTimes wiTiTimesCopy = new WiTiTimes(wiTiTimes);
-        //         tasksCopy.Remove(task);
-        //         wiTiTimes.AddTask(task);
-        //         SolveUsingRecursion(tasksCopy, wiTiTimesCopy);
-        //     }
-        // }
+
+        public static WiTiTimes SolveUsingRecursion(IEnumerable<Task> tasks)
+        {
+            WiTiTimes result = null;
+            foreach (var task in tasks)
+            {
+                LinkedList<Task> tasksCopy = new LinkedList<Task>(tasks);
+                tasksCopy.Remove(task);
+                WiTiTimes recursionResult = SolveUsingRecursion(tasksCopy);
+                recursionResult.AddTask(task);
+                if (result == null || recursionResult.TotalWeightedTardiness < result.TotalWeightedTardiness)
+                    result = recursionResult;
+            }
+
+            return result ?? new WiTiTimes();
+        }
     }
 }
