@@ -39,18 +39,16 @@ namespace WiTi
 
         public static void Main(string[] args)
         {
-            Console.WriteLine("Brute Force using permutations (sorted by deadline)");
+            Console.WriteLine("SortD");
             SolveForEachInput(x =>
             {
                 x.Sort();
-                return BruteForce.SolveUsingPermutations(x).TotalWeightedTardiness;
+                return new WiTiTimes(x).TotalWeightedTardiness;
             });
-            Console.WriteLine("Brute Force using recursion (sorted by deadline)");
-            SolveForEachInput(x =>
-            {
-                x.Sort();
-                return BruteForce.SolveUsingRecursion(x).TotalWeightedTardiness;
-            });
+            Console.WriteLine("Brute Force using permutations");
+            SolveForEachInput(x => BruteForce.SolveUsingPermutations(x).TotalWeightedTardiness);
+            Console.WriteLine("Brute Force using recursion");
+            SolveForEachInput(x => BruteForce.SolveUsingRecursion(x).TotalWeightedTardiness);
             Console.WriteLine("Dynamic Programming using iteration");
             SolveForEachInput(DynamicProgramming.SolveUsingIteration);
             Console.WriteLine("Dynamic Programming using recursion");
