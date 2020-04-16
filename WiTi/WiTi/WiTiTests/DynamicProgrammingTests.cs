@@ -41,7 +41,7 @@ namespace WiTiTests
         };            
             
         [Test]
-        public void ShouldGiveOptimalTotalWeightedTardiness()
+        public void ShouldGiveOptimalTotalWeightedTardinessUsingRecursion()
         {
             for (int i = 0; i < filePaths.Length; i++)
             {
@@ -49,6 +49,18 @@ namespace WiTiTests
                 TaskReader taskReader = new TaskReader();
                 List<Task> tasks = taskReader.ReadTasksFromFile(fileReader);
                 Assert.AreEqual(expectedValues[i], DynamicProgramming.SolveUsingRecursion(tasks));   
+            }
+        }
+        
+        [Test]
+        public void ShouldGiveOptimalTotalWeightedTardinessUsingIteration()
+        {
+            for (int i = 0; i < filePaths.Length; i++)
+            {
+                using StreamReader fileReader = new StreamReader(filePaths[i]);
+                TaskReader taskReader = new TaskReader();
+                List<Task> tasks = taskReader.ReadTasksFromFile(fileReader);
+                Assert.AreEqual(expectedValues[i], DynamicProgramming.SolveUsingIteration(tasks));   
             }
         }
     }
