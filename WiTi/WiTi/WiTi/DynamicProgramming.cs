@@ -11,14 +11,19 @@ namespace WiTi
 
         private DynamicProgramming(List<Task> tasks)
         {
-            totalWeightedTardiness = new int?[Convert.ToInt32(Math.Pow(2, tasks.Count))];
+            totalWeightedTardiness = new int?[GetPermutationsCount(tasks.Count)];
             this.tasks = tasks;
+        }
+
+        private static int GetPermutationsCount(int tasksCount)
+        {
+            return Convert.ToInt32(Math.Pow(2, tasksCount));
         }
 
         public static int SolveUsingRecursion(List<Task> tasks)
         {
             DynamicProgramming dynamicProgramming = new DynamicProgramming(tasks);
-            int permutation = Convert.ToInt32(Math.Pow(2, tasks.Count)) - 1;
+            int permutation = GetPermutationsCount(tasks.Count) - 1;
             return dynamicProgramming.SolveUsingRecursion(permutation);
         }
 
@@ -26,45 +31,63 @@ namespace WiTi
         {
             if (permutation <= 0)
                 return 0;
-
-            var tasksSublist = Enumerable.Range(0, tasks.Count)
-                .Where(i => DoesPermutationContainIndex(permutation, i))
-                .Select(i => new {t = tasks[i], i});
-
-            totalWeightedTardiness[permutation] = tasksSublist.Select(ti =>
-                Math.Max(-ti.t.Deadline + tasksSublist.Select(ti => ti.t.PerformTime).Sum(), 0) * ti.t.PenaltyWeight +
-                GetTotalWeightedTardiness(permutation, ti.i)).Min();
-
+            IEnumerable<TaskWithIndex> tasksSublist = GetTasksSublist(tasks, permutation);
+            totalWeightedTardiness[permutation] = tasksSublist.Select(t =>
+                GetPenaltyPlacedLast(tasksSublist, t) + GetTotalWeightedTardiness(permutation, t.Index)).Min();
             return totalWeightedTardiness[permutation].Value;
         }
 
-        private static bool DoesPermutationContainIndex(int permutation, int i)
+        private static IEnumerable<TaskWithIndex> GetTasksSublist(List<Task> tasks, int permutation)
         {
-            return (permutation >> i & 1) == 1;
+            return Enumerable.Range(0, tasks.Count)
+                .Where(i => DoesPermutationContainIndex(permutation, i))
+                .Select(i => new TaskWithIndex(tasks[i], i));
         }
 
-        private int GetTotalWeightedTardiness(int permutation, int i)
+        private static bool DoesPermutationContainIndex(int permutation, int index)
         {
-            int newPermutation = permutation & ~(1 << i);
+            return (permutation >> index & 1) == 1;
+        }
+
+        private static int GetPenaltyPlacedLast(IEnumerable<TaskWithIndex> tasksSublist, TaskWithIndex task)
+        {
+            return Math.Max(-task.Deadline + tasksSublist.Select(t => t.PerformTime).Sum(), 0) * task.PenaltyWeight;
+        }
+
+        private int GetTotalWeightedTardiness(int permutation, int index)
+        {
+            int newPermutation = GetPermutationWithoutIndex(permutation, index);
             return totalWeightedTardiness[newPermutation] ?? SolveUsingRecursion(newPermutation);
+        }
+
+        private static int GetPermutationWithoutIndex(int permutation, int index)
+        {
+            return permutation & ~(1 << index);
         }
 
         public static int SolveUsingIteration(List<Task> tasks)
         {
-            int numberOfPermutations = Convert.ToInt32(Math.Pow(2, tasks.Count));
+            int numberOfPermutations = GetPermutationsCount(tasks.Count);
             int[] totalWeightedTardiness = new int[numberOfPermutations];
-            for (int k = 1; k < numberOfPermutations; k++)
+            for (int permutation = 1; permutation < numberOfPermutations; permutation++)
             {
-                var tasksSublist = Enumerable.Range(0, tasks.Count)
-                    .Where(i => DoesPermutationContainIndex(k, i))
-                    .Select(i => new {t = tasks[i], i});
-
-                totalWeightedTardiness[k] = tasksSublist.Select(ti =>
-                    Math.Max(-ti.t.Deadline + tasksSublist.Select(ti => ti.t.PerformTime).Sum(), 0) *
-                    ti.t.PenaltyWeight + totalWeightedTardiness[k & ~(1 << ti.i)]).Min();
+                IEnumerable<TaskWithIndex> tasksSublist = GetTasksSublist(tasks, permutation);
+                totalWeightedTardiness[permutation] = tasksSublist.Select(t =>
+                    GetPenaltyPlacedLast(tasksSublist, t) +
+                    totalWeightedTardiness[GetPermutationWithoutIndex(permutation, t.Index)]).Min();
             }
 
             return totalWeightedTardiness.Last();
+        }
+
+        private class TaskWithIndex : Task
+        {
+            public TaskWithIndex(Task task, int index) : base(task.PerformTime, task.PenaltyWeight, task.Deadline)
+            {
+                Index = index;
+            }
+
+            public int Index { get; }
         }
     }
 }
