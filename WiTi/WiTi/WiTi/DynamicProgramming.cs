@@ -7,8 +7,7 @@ namespace WiTi
     public class DynamicProgramming
     {
         private readonly List<Task> tasks;
-
-        private int?[] totalWeightedTardiness;
+        private readonly int?[] totalWeightedTardiness;
 
         private DynamicProgramming(List<Task> tasks)
         {
@@ -48,6 +47,24 @@ namespace WiTi
         {
             int newPermutation = permutation & ~(1 << i);
             return totalWeightedTardiness[newPermutation] ?? SolveUsingRecursion(newPermutation);
+        }
+
+        public static int SolveUsingIteration(List<Task> tasks)
+        {
+            int numberOfPermutations = Convert.ToInt32(Math.Pow(2, tasks.Count));
+            int[] totalWeightedTardiness = new int[numberOfPermutations];
+            for (int k = 1; k < numberOfPermutations; k++)
+            {
+                var tasksSublist = Enumerable.Range(0, tasks.Count)
+                    .Where(i => DoesPermutationContainIndex(k, i))
+                    .Select(i => new {t = tasks[i], i});
+
+                totalWeightedTardiness[k] = tasksSublist.Select(ti =>
+                    Math.Max(-ti.t.Deadline + tasksSublist.Select(ti => ti.t.PerformTime).Sum(), 0) *
+                    ti.t.PenaltyWeight + totalWeightedTardiness[k & ~(1 << ti.i)]).Min();
+            }
+
+            return totalWeightedTardiness.Last();
         }
     }
 }
