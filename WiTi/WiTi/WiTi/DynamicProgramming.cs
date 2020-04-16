@@ -28,20 +28,20 @@ namespace WiTi
             if (permutation <= 0)
                 return 0;
 
-            List<int> indices = new List<int>();
-            List<Task> tasksSublist = new List<Task>();
-            for (int i = 0; i < tasks.Count; i++)
-                if ((permutation >> i & 1) == 1)
-                {
-                    indices.Add(i);
-                    tasksSublist.Add(tasks[i]);
-                }
+            var tasksSublist = Enumerable.Range(0, tasks.Count)
+                .Where(i => DoesPermutationContainIndex(permutation, i))
+                .Select(i => new {t = tasks[i], i});
 
-            totalWeightedTardiness[permutation] = tasksSublist.Select((t, i) =>
-                Math.Max(-t.Deadline + tasksSublist.Select(t => t.PerformTime).Sum(), 0) * t.PenaltyWeight +
-                GetTotalWeightedTardiness(permutation, indices[i])).Min();
+            totalWeightedTardiness[permutation] = tasksSublist.Select(ti =>
+                Math.Max(-ti.t.Deadline + tasksSublist.Select(ti => ti.t.PerformTime).Sum(), 0) * ti.t.PenaltyWeight +
+                GetTotalWeightedTardiness(permutation, ti.i)).Min();
 
             return totalWeightedTardiness[permutation].Value;
+        }
+
+        private static bool DoesPermutationContainIndex(int permutation, int i)
+        {
+            return (permutation >> i & 1) == 1;
         }
 
         private int GetTotalWeightedTardiness(int permutation, int i)
