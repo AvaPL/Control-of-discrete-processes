@@ -6,12 +6,12 @@ namespace FSP
 {
     public class FSPTimes
     {
-        // TODO: add permutations
-        
-        private FSPTimes(int numberOfMachines, int numberOfTasks)
+        private FSPTimes(List<Task> tasks)
         {
-            StartTimes = InitializeTimesArray(numberOfMachines, numberOfTasks);
-            CompleteTimes = InitializeTimesArray(numberOfMachines, numberOfTasks);
+            Permutation = tasks;
+            int numberOfMachines = tasks.First().PerformTimes.Count;
+            StartTimes = InitializeTimesArray(numberOfMachines, tasks.Count);
+            CompleteTimes = InitializeTimesArray(numberOfMachines, tasks.Count);
         }
 
         private static int[][] InitializeTimesArray(int numberOfMachines, int numberOfTasks)
@@ -21,7 +21,8 @@ namespace FSP
                 result[i] = new int[numberOfTasks];
             return result;
         }
-
+        
+        public List<Task> Permutation { get; }
         public int[][] StartTimes { get; }
         public int[][] CompleteTimes { get; }
 
