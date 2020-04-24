@@ -6,6 +6,8 @@ namespace FSP
 {
     public class BruteForce
     {
+        private FSPTimes optimalPermutation;
+
         public static FSPTimes SolveUsingPermutations(List<Task> tasks)
         {
             Permutations<Task> permutations = new Permutations<Task>(tasks);
@@ -21,22 +23,38 @@ namespace FSP
             return result;
         }
 
-        public static FSPTimes SolveUsingRecursion(IEnumerable<Task> tasks)
+        public static FSPTimes SolveUsingRecursion(List<Task> tasks)
         {
-            FSPTimes result = null;
-            foreach (var task in tasks)
-            {
-                LinkedList<Task> tasksCopy = new LinkedList<Task>(tasks);
-                tasksCopy.Remove(task);
-                FSPTimes recursionResult = tasksCopy.Count == 0
-                    ? new FSPTimes(task.PerformTimes.Count)
-                    : SolveUsingRecursion(tasksCopy);
-                recursionResult.AddTask(task);
-                if (result == null || recursionResult.GetMaxCompleteTime() < result.GetMaxCompleteTime())
-                    result = recursionResult;
-            }
+            BruteForce bruteForce = new BruteForce();
+            bruteForce.SolveUsingRecursion(new LinkedList<Task>(tasks), new List<Task>());
+            return bruteForce.optimalPermutation;
+        }
 
-            return result;
+        private void SolveUsingRecursion(LinkedList<Task> tasksToAdd, List<Task> permutation)
+        {
+            if (tasksToAdd.Count == 0)
+                PickOptimalPermutation(permutation);
+            foreach (var task in tasksToAdd)
+            {
+                LinkedList<Task> tasksToAddCopy = CopyWithoutTask(tasksToAdd, task);
+                List<Task> permutationCopy = new List<Task>(permutation) {task};
+                SolveUsingRecursion(tasksToAddCopy, permutationCopy);
+            }
+        }
+
+        private static LinkedList<Task> CopyWithoutTask(LinkedList<Task> tasksToAdd, Task taskToRemove)
+        {
+            LinkedList<Task> tasksToAddCopy = new LinkedList<Task>(tasksToAdd);
+            tasksToAddCopy.Remove(taskToRemove);
+            return tasksToAddCopy;
+        }
+
+        private void PickOptimalPermutation(List<Task> permutation)
+        {
+            FSPTimes recursionResult = FSPTimes.Calculate(permutation);
+            if (optimalPermutation == null ||
+                recursionResult.GetMaxCompleteTime() < optimalPermutation.GetMaxCompleteTime())
+                optimalPermutation = recursionResult;
         }
     }
 }
