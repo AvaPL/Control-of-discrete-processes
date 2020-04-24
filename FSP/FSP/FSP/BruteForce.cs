@@ -21,20 +21,22 @@ namespace FSP
             return result;
         }
 
-        // public static FSPTimes SolveUsingRecursion(IEnumerable<Task> tasks)
-        // {
-        //     FSPTimes result = null;
-        //     foreach (var task in tasks)
-        //     {
-        //         LinkedList<Task> tasksCopy = new LinkedList<Task>(tasks);
-        //         tasksCopy.Remove(task);
-        //         FSPTimes recursionResult = SolveUsingRecursion(tasksCopy);
-        //         recursionResult.AddTask(task);
-        //         if (result == null || recursionResult.GetMaxCompleteTime() < result.GetMaxCompleteTime())
-        //             result = recursionResult;
-        //     }
-        //
-        //     return result ?? new FSPTimes();
-        // }
+        public static FSPTimes SolveUsingRecursion(IEnumerable<Task> tasks)
+        {
+            FSPTimes result = null;
+            foreach (var task in tasks)
+            {
+                LinkedList<Task> tasksCopy = new LinkedList<Task>(tasks);
+                tasksCopy.Remove(task);
+                FSPTimes recursionResult = tasksCopy.Count == 0
+                    ? new FSPTimes(task.PerformTimes.Count)
+                    : SolveUsingRecursion(tasksCopy);
+                recursionResult.AddTask(task);
+                if (result == null || recursionResult.GetMaxCompleteTime() < result.GetMaxCompleteTime())
+                    result = recursionResult;
+            }
+
+            return result;
+        }
     }
 }
