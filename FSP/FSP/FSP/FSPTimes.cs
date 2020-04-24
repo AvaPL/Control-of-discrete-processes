@@ -6,6 +6,8 @@ namespace FSP
 {
     public class FSPTimes
     {
+        // TODO: add permutations
+        
         private FSPTimes(int numberOfMachines, int numberOfTasks)
         {
             StartTimes = InitializeTimesArray(numberOfMachines, numberOfTasks);
@@ -28,12 +30,12 @@ namespace FSP
             int numberOfMachines = tasks.First().PerformTimes.Count;
             FSPTimes result = new FSPTimes(numberOfMachines, tasks.Count);
             for (int i = 0; i < numberOfMachines; i++)
-                for (int j = 0; j < tasks.Count; j++)
-                {
-                    result.StartTimes[i][j] = Math.Max(i == 0 ? 0 : result.CompleteTimes[i - 1][j],
-                        j == 0 ? 0 : result.CompleteTimes[i][j - 1]);
-                    result.CompleteTimes[i][j] = result.StartTimes[i][j] + tasks[j].PerformTimes[i];
-                }
+            for (int j = 0; j < tasks.Count; j++)
+            {
+                result.StartTimes[i][j] = Math.Max(i == 0 ? 0 : result.CompleteTimes[i - 1][j],
+                    j == 0 ? 0 : result.CompleteTimes[i][j - 1]);
+                result.CompleteTimes[i][j] = result.StartTimes[i][j] + tasks[j].PerformTimes[i];
+            }
 
             return result;
         }

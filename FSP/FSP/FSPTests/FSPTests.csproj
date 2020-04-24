@@ -43,6 +43,7 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="BruteForceTests.cs" />
         <Compile Include="FSPTimesTests.cs" />
         <Compile Include="TaskReaderTests.cs" />
         <Compile Include="TaskTests.cs" />
