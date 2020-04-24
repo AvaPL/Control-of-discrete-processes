@@ -43,9 +43,9 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="FSPTimesTests.cs" />
         <Compile Include="TaskReaderTests.cs" />
         <Compile Include="TaskTests.cs" />
-        <Compile Include="Tests.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>
