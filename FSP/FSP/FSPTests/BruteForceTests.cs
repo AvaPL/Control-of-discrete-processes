@@ -15,8 +15,8 @@ namespace FSPTests
             @"../../../Data/data002.txt",
             @"../../../Data/data003.txt",
             @"../../../Data/data004.txt",
-            @"../../../Data/data005.txt",
-            @"../../../Data/data006.txt"
+            // @"../../../Data/data005.txt",
+            // @"../../../Data/data006.txt"
         };
 
         private readonly int[] expectedResults =
@@ -25,8 +25,8 @@ namespace FSPTests
             650,
             591,
             727,
-            654,
-            780
+            // 654,
+            // 780
         };
 
         [Test]
