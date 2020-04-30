@@ -45,6 +45,7 @@
     <ItemGroup>
         <Compile Include="BruteForceTests.cs" />
         <Compile Include="FSPTimesTests.cs" />
+        <Compile Include="JohnsonTests.cs" />
         <Compile Include="TaskReaderTests.cs" />
         <Compile Include="TaskTests.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />

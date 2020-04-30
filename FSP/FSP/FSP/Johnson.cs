@@ -5,16 +5,24 @@ namespace FSP
 {
     public class Johnson
     {
-        public FSPTimes Solve(List<Task> tasks)
+        public static FSPTimes Solve(List<Task> tasks)
         {
-            FSPTimes fspTimes = new FSPTimes(2);
-
+            LinkedList<Task> tasksLinkedList = new LinkedList<Task>(tasks);
+            Task[] permutation = new Task[tasks.Count];
             int i = 0;
-            int j = tasks.Count-1;
-            while (tasks.Count>0)
+            int j = tasksLinkedList.Count - 1;
+            while (tasksLinkedList.Count > 0)
             {
-                tasks.Select(t=>t.PerformTimes)
+                int minPerformTime = tasksLinkedList.SelectMany(task => task.PerformTimes).Min();
+                Task minByPerformTime = tasksLinkedList.First(task => task.PerformTimes.Contains(minPerformTime));
+                if (minByPerformTime.PerformTimes[0] < minByPerformTime.PerformTimes[1])
+                    permutation[i++] = minByPerformTime;
+                else
+                    permutation[j--] = minByPerformTime;
+                tasksLinkedList.Remove(minByPerformTime);
             }
+
+            return FSPTimes.Calculate(permutation.ToList());
         }
     }
 }
