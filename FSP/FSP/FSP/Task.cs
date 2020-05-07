@@ -21,6 +21,11 @@ namespace FSP
             return new Task(times.Where((t, i) => i % 2 == 1));
         }
         
+        public int GetNumberOfMachines()
+        {
+            return PerformTimes.Count;
+        }
+        
         public int CompareTo(Task other)
         {
             return GetHashCode().CompareTo(other.GetHashCode());

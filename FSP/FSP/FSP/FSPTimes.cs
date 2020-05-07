@@ -6,13 +6,6 @@ namespace FSP
 {
     public class FSPTimes
     {
-        public FSPTimes(int numberOfMachines)
-        {
-            Permutation = new List<Task>();
-            StartTimes = InitializeTimesList(numberOfMachines);
-            CompleteTimes = InitializeTimesList(numberOfMachines);
-        }
-
         private FSPTimes(List<Task> tasks)
         {
             Permutation = tasks;
@@ -40,8 +33,8 @@ namespace FSP
 
         private int GetNumberOfMachines()
         {
-            return Permutation.First().PerformTimes.Count;
-        } 
+            return Permutation.First().GetNumberOfMachines();
+        }
         
         public static FSPTimes Calculate(List<Task> tasks)
         {
@@ -59,12 +52,6 @@ namespace FSP
                     CompleteTimes[i].Count == 0 ? 0 : CompleteTimes[i].Last()));
                 CompleteTimes[i].Add(StartTimes[i].Last() + task.PerformTimes[i]);
             }
-        }
-
-        public void AddTask(Task task)
-        {
-            Permutation.Add(task);
-            Add(task);
         }
 
         public int GetMaxCompleteTime()

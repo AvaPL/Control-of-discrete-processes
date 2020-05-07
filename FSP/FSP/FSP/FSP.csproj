@@ -153,6 +153,7 @@
         <Reference Include="System.Xml.Linq" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="BranchAndBound.cs" />
         <Compile Include="BruteForce.cs" />
         <Compile Include="Johnson.cs" />
         <Compile Include="Program.cs" />
