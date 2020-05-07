@@ -30,42 +30,61 @@ namespace FSPTests
         };
 
         [Test]
-        public void ShouldGiveOptimalMaxCompleteTimeForLevel1()
+        public void ShouldGiveOptimalMaxCompleteTimeForLowerBoundLevel1()
         {
-            ShouldGiveOptimalMaxCompleteTimeForLevel(BranchAndBound.LowerBoundLevel.Level1);
+            ShouldGiveOptimalMaxCompleteTimeForLowerBoundLevel(BranchAndBound.LowerBoundLevel.Level1);
         }
 
-        private void ShouldGiveOptimalMaxCompleteTimeForLevel(BranchAndBound.LowerBoundLevel lowerBoundLevel)
+        private void ShouldGiveOptimalMaxCompleteTimeForLowerBoundLevel(BranchAndBound.LowerBoundLevel level)
         {
             for (int i = 0; i < filePaths.Length; i++)
-                ShouldGiveOptimalMaxCompleteTimeForFile(i, lowerBoundLevel);
+                ShouldGiveOptimalMaxCompleteTimeForFile(i, BranchAndBound.UpperBoundLevel.Level0, level);
         }
 
-        private void ShouldGiveOptimalMaxCompleteTimeForFile(int fileIndex, BranchAndBound.LowerBoundLevel level)
+        private void ShouldGiveOptimalMaxCompleteTimeForFile(int fileIndex,
+            BranchAndBound.UpperBoundLevel upperBoundLevel, BranchAndBound.LowerBoundLevel lowerBoundLevel)
         {
             using StreamReader fileReader = new StreamReader(filePaths[fileIndex]);
             TaskReader taskReader = new TaskReader();
             List<Task> tasks = taskReader.ReadTasksFromFile(fileReader);
-            FSPTimes fspTimes = BranchAndBound.Solve(tasks, level);
+            FSPTimes fspTimes = BranchAndBound.Solve(tasks, upperBoundLevel, lowerBoundLevel);
             Assert.AreEqual(expectedResults[fileIndex], fspTimes.GetMaxCompleteTime());
         }
-        
+
         [Test]
-        public void ShouldGiveOptimalMaxCompleteTimeForLevel2()
+        public void ShouldGiveOptimalMaxCompleteTimeForLowerBoundLevel2()
         {
-            ShouldGiveOptimalMaxCompleteTimeForLevel(BranchAndBound.LowerBoundLevel.Level2);
+            ShouldGiveOptimalMaxCompleteTimeForLowerBoundLevel(BranchAndBound.LowerBoundLevel.Level2);
+        }
+
+        [Test]
+        public void ShouldGiveOptimalMaxCompleteTimeForLowerBoundLevel3()
+        {
+            ShouldGiveOptimalMaxCompleteTimeForLowerBoundLevel(BranchAndBound.LowerBoundLevel.Level3);
+        }
+
+        [Test]
+        public void ShouldGiveOptimalMaxCompleteTimeForLowerBoundLevel4()
+        {
+            ShouldGiveOptimalMaxCompleteTimeForLowerBoundLevel(BranchAndBound.LowerBoundLevel.Level4);
         }
         
         [Test]
-        public void ShouldGiveOptimalMaxCompleteTimeForLevel3()
+        public void ShouldGiveOptimalMaxCompleteTimeForUpperBoundLevel1()
         {
-            ShouldGiveOptimalMaxCompleteTimeForLevel(BranchAndBound.LowerBoundLevel.Level3);
+            ShouldGiveOptimalMaxCompleteTimeForUpperBoundLevel(BranchAndBound.UpperBoundLevel.Level1);
         }
-        
-        [Test]
-        public void ShouldGiveOptimalMaxCompleteTimeForLevel4()
+
+        private void ShouldGiveOptimalMaxCompleteTimeForUpperBoundLevel(BranchAndBound.UpperBoundLevel level)
         {
-            ShouldGiveOptimalMaxCompleteTimeForLevel(BranchAndBound.LowerBoundLevel.Level4);
+            for (int i = 0; i < filePaths.Length; i++)
+                ShouldGiveOptimalMaxCompleteTimeForFile(i, level, BranchAndBound.LowerBoundLevel.Level3);
+        }
+
+        [Test]
+        public void ShouldGiveOptimalMaxCompleteTimeForUpperBoundLevel2()
+        {
+            ShouldGiveOptimalMaxCompleteTimeForUpperBoundLevel(BranchAndBound.UpperBoundLevel.Level2);
         }
     }
 }
