@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using FSP;
 using NUnit.Framework;
@@ -29,16 +30,42 @@ namespace FSPTests
         };
 
         [Test]
-        public void ShouldGiveOptimalMaxCompleteTime()
+        public void ShouldGiveOptimalMaxCompleteTimeForLevel1()
+        {
+            ShouldGiveOptimalMaxCompleteTimeForLevel(BranchAndBound.LowerBoundLevel.Level1);
+        }
+
+        private void ShouldGiveOptimalMaxCompleteTimeForLevel(BranchAndBound.LowerBoundLevel lowerBoundLevel)
         {
             for (int i = 0; i < filePaths.Length; i++)
-            {
-                using StreamReader fileReader = new StreamReader(filePaths[i]);
-                TaskReader taskReader = new TaskReader();
-                List<Task> tasks = taskReader.ReadTasksFromFile(fileReader);
-                FSPTimes fspTimes = BranchAndBound.Solve(tasks);
-                Assert.AreEqual(expectedResults[i], fspTimes.GetMaxCompleteTime());
-            }
+                ShouldGiveOptimalMaxCompleteTimeForFile(i, lowerBoundLevel);
+        }
+
+        private void ShouldGiveOptimalMaxCompleteTimeForFile(int fileIndex, BranchAndBound.LowerBoundLevel level)
+        {
+            using StreamReader fileReader = new StreamReader(filePaths[fileIndex]);
+            TaskReader taskReader = new TaskReader();
+            List<Task> tasks = taskReader.ReadTasksFromFile(fileReader);
+            FSPTimes fspTimes = BranchAndBound.Solve(tasks, level);
+            Assert.AreEqual(expectedResults[fileIndex], fspTimes.GetMaxCompleteTime());
+        }
+        
+        [Test]
+        public void ShouldGiveOptimalMaxCompleteTimeForLevel2()
+        {
+            ShouldGiveOptimalMaxCompleteTimeForLevel(BranchAndBound.LowerBoundLevel.Level2);
+        }
+        
+        [Test]
+        public void ShouldGiveOptimalMaxCompleteTimeForLevel3()
+        {
+            ShouldGiveOptimalMaxCompleteTimeForLevel(BranchAndBound.LowerBoundLevel.Level3);
+        }
+        
+        [Test]
+        public void ShouldGiveOptimalMaxCompleteTimeForLevel4()
+        {
+            ShouldGiveOptimalMaxCompleteTimeForLevel(BranchAndBound.LowerBoundLevel.Level4);
         }
     }
 }

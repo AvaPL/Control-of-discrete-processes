@@ -1,16 +1,31 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace FSP
 {
     public class BranchAndBound
     {
-        private int? upperBound;
-        private List<Task> optimalPermutation;
-
-        public static FSPTimes Solve(List<Task> tasks)
+        public enum LowerBoundLevel
         {
-            BranchAndBound branchAndBound = new BranchAndBound();
+            Level1,
+            Level2,
+            Level3,
+            Level4
+        }
+
+        private List<Task> optimalPermutation;
+        private int? upperBound;
+        private readonly LowerBoundLevel lowerBoundLevel;
+
+        public BranchAndBound(LowerBoundLevel lowerBoundLevel)
+        {
+            this.lowerBoundLevel = lowerBoundLevel;
+        }
+
+        public static FSPTimes Solve(List<Task> tasks, LowerBoundLevel lowerBoundLevel)
+        {
+            BranchAndBound branchAndBound = new BranchAndBound(lowerBoundLevel);
             foreach (var task in tasks)
                 branchAndBound.Solve(tasks, new List<Task>(), task);
 
@@ -41,19 +56,112 @@ namespace FSP
             }
         }
 
-        private static int CalculateLowerBound(List<Task> orderedTasks, List<Task> unorderedTasks)
+        private int CalculateLowerBound(List<Task> orderedTasks, List<Task> unorderedTasks)
+        {
+            return lowerBoundLevel switch
+            {
+                LowerBoundLevel.Level1 => CalculateLowerBoundLevel1(orderedTasks, unorderedTasks),
+                LowerBoundLevel.Level2 => CalculateLowerBoundLevel2(orderedTasks, unorderedTasks),
+                LowerBoundLevel.Level3 => CalculateLowerBoundLevel3(orderedTasks, unorderedTasks),
+                LowerBoundLevel.Level4 => CalculateLowerBoundLevel4(orderedTasks, unorderedTasks),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+        }
+
+        private static int CalculateLowerBoundLevel1(List<Task> orderedTasks, List<Task> unorderedTasks)
         {
             FSPTimes orderedTasksTimes = FSPTimes.Calculate(orderedTasks);
             int maxLowerBound = 0;
-            for (int i = 0; i < orderedTasksTimes.GetNumberOfMachines(); i++)
+            for (int i = 0; i < orderedTasks.First().GetNumberOfMachines(); i++)
             {
                 int lowerBound = orderedTasksTimes.CompleteTimes[i][orderedTasks.Count - 1] +
                                  unorderedTasks.Sum(task => task.PerformTimes[i]);
                 if (lowerBound > maxLowerBound)
                     maxLowerBound = lowerBound;
             }
-            
+
             return maxLowerBound;
+        }
+
+        private static int CalculateLowerBoundLevel2(List<Task> orderedTasks, List<Task> unorderedTasks)
+        {
+            FSPTimes orderedTasksTimes = FSPTimes.Calculate(orderedTasks);
+            int maxLowerBound = 0;
+            for (int i = 0; i < orderedTasks.First().GetNumberOfMachines(); i++)
+            {
+                int lowerBound = orderedTasksTimes.CompleteTimes[i][orderedTasks.Count - 1] +
+                                 unorderedTasks.Sum(task => task.PerformTimes[i]) +
+                                 SumOfMinimumPerformTimes(orderedTasks, unorderedTasks, i);
+                if (lowerBound > maxLowerBound)
+                    maxLowerBound = lowerBound;
+            }
+
+            return maxLowerBound;
+        }
+
+        private static int SumOfMinimumPerformTimes(List<Task> orderedTasks, List<Task> unorderedTasks, int i)
+        {
+            List<Task> allTasks = new List<Task>(orderedTasks);
+            allTasks.AddRange(unorderedTasks);
+            int sum = 0;
+            for (int k = i + 1; k < allTasks.First().GetNumberOfMachines(); k++)
+                sum += allTasks.Min(task => task.PerformTimes[k]);
+
+            return sum;
+        }
+
+        private static int CalculateLowerBoundLevel3(List<Task> orderedTasks, List<Task> unorderedTasks)
+        {
+            FSPTimes orderedTasksTimes = FSPTimes.Calculate(orderedTasks);
+            int maxLowerBound = 0;
+            for (int i = 0; i < orderedTasks.First().GetNumberOfMachines(); i++)
+            {
+                int lowerBound = orderedTasksTimes.CompleteTimes[i][orderedTasks.Count - 1] +
+                                 unorderedTasks.Sum(task => task.PerformTimes[i]) +
+                                 SumOfMinimumPerformTimes(unorderedTasks, i);
+                if (lowerBound > maxLowerBound)
+                    maxLowerBound = lowerBound;
+            }
+
+            return maxLowerBound;
+        }
+
+        private static int SumOfMinimumPerformTimes(List<Task> unorderedTasks, int i)
+        {
+            int sum = 0;
+            for (int k = i + 1; k < unorderedTasks.First().GetNumberOfMachines(); k++)
+                sum += unorderedTasks.Min(task => task.PerformTimes[k]);
+
+            return sum;
+        }
+
+        private static int CalculateLowerBoundLevel4(List<Task> orderedTasks, List<Task> unorderedTasks)
+        {
+            FSPTimes orderedTasksTimes = FSPTimes.Calculate(orderedTasks);
+            int maxLowerBound = 0;
+            for (int i = 0; i < orderedTasks.First().GetNumberOfMachines(); i++)
+            {
+                int lowerBound = orderedTasksTimes.CompleteTimes[i][orderedTasks.Count - 1] +
+                                 unorderedTasks.Sum(task => task.PerformTimes[i]) +
+                                 MinimumSumOfPerformTimes(unorderedTasks, i);
+                if (lowerBound > maxLowerBound)
+                    maxLowerBound = lowerBound;
+            }
+
+            return maxLowerBound;
+        }
+
+        private static int MinimumSumOfPerformTimes(List<Task> unorderedTasks, int i)
+        {
+            int minimum = 0;
+            foreach (var task in unorderedTasks)
+            {
+                int sum = task.PerformTimes.Skip(i).Sum();
+                if (sum < minimum)
+                    minimum = sum;
+            }
+
+            return minimum;
         }
     }
 }
