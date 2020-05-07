@@ -38,7 +38,7 @@ namespace FSP
         public List<List<int>> StartTimes { get; }
         public List<List<int>> CompleteTimes { get; }
 
-        private int GetNumberOfMachines()
+        public int GetNumberOfMachines()
         {
             return Permutation.First().PerformTimes.Count;
         } 

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace FSP
 {
@@ -7,42 +8,52 @@ namespace FSP
         private int? upperBound;
         private List<Task> optimalPermutation;
 
-        public static List<Task> Solve(List<Task> tasks)
+        public static FSPTimes Solve(List<Task> tasks)
         {
             BranchAndBound branchAndBound = new BranchAndBound();
-            foreach (var task in tasks) 
-                branchAndBound.Solve(new LinkedList<Task>(tasks), task);
+            foreach (var task in tasks)
+                branchAndBound.Solve(tasks, new List<Task>(), task);
 
-            return branchAndBound.optimalPermutation;
+            return FSPTimes.Calculate(branchAndBound.optimalPermutation);
         }
 
-        private void Solve(LinkedList<Task> tasks, Task currentTask)
+        private void Solve(IEnumerable<Task> unorderedTasks, List<Task> permutation, Task currentTask)
         {
-            List<Task> permutation = new List<Task>();
-            permutation.Add(currentTask);
-            tasks.Remove(currentTask);
-            if (tasks.Count > 0)
+            LinkedList<Task> unorderedTasksCopy = new LinkedList<Task>(unorderedTasks);
+            unorderedTasksCopy.Remove(currentTask);
+            List<Task> permutationCopy = new List<Task>(permutation) {currentTask};
+            if (unorderedTasksCopy.Count > 0)
             {
-                int lowerBound = CalculateLowerBound(permutation);
+                int lowerBound = CalculateLowerBound(permutationCopy, unorderedTasksCopy.ToList());
                 if (!upperBound.HasValue || lowerBound <= upperBound)
-                    foreach (var task in tasks)
-                        Solve(tasks, task);
+                    foreach (var task in unorderedTasksCopy)
+                        Solve(unorderedTasksCopy, permutationCopy, task);
             }
             else
             {
-                FSPTimes fspTimes = FSPTimes.Calculate(permutation);
+                FSPTimes fspTimes = FSPTimes.Calculate(permutationCopy);
                 int maxCompleteTime = fspTimes.GetMaxCompleteTime();
-                if (maxCompleteTime < upperBound)
+                if (!upperBound.HasValue || maxCompleteTime < upperBound)
                 {
                     upperBound = maxCompleteTime;
-                    optimalPermutation = permutation;
+                    optimalPermutation = permutationCopy;
                 }
             }
         }
 
-        private static int CalculateLowerBound(List<Task> permutation)
+        private static int CalculateLowerBound(List<Task> orderedTasks, List<Task> unorderedTasks)
         {
-            throw new System.NotImplementedException();
+            FSPTimes orderedTasksTimes = FSPTimes.Calculate(orderedTasks);
+            int maxLowerBound = 0;
+            for (int i = 0; i < orderedTasksTimes.GetNumberOfMachines(); i++)
+            {
+                int lowerBound = orderedTasksTimes.CompleteTimes[i][orderedTasks.Count - 1] +
+                                 unorderedTasks.Sum(task => task.PerformTimes[i]);
+                if (lowerBound > maxLowerBound)
+                    maxLowerBound = lowerBound;
+            }
+            
+            return maxLowerBound;
         }
     }
 }
