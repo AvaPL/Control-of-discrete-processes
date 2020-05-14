@@ -22,16 +22,6 @@ namespace FSPTests
             @"../../../Data/data006.txt"
         };
 
-        private readonly int[] expectedResults =
-        {
-            412,
-            650,
-            591,
-            727,
-            654,
-            780
-        };
-
         [Test]
         public void ShouldGiveOptimalMaxQuitTime()
         {
