@@ -32,28 +32,48 @@ namespace FSP
         {
             while (temperature > endTemperature)
             {
-                for (int i = 0; i < numberOfEpochs; i++)
-                {
-                    List<Task> newPermutation = changePermutation.Invoke(currentPermutationTimes.Permutation);
-                    FSPTimes newPermutationTimes = FSPTimes.Calculate(newPermutation);
-                    if (newPermutationTimes.GetMaxCompleteTime() > currentPermutationTimes.GetMaxCompleteTime())
-                    {
-                        double randomValue = Random.NextDouble();
-                        if (randomValue >
-                            Math.Exp((currentPermutationTimes.GetMaxCompleteTime() -
-                                      newPermutationTimes.GetMaxCompleteTime()) / temperature))
-                            newPermutationTimes = currentPermutationTimes;
-                    }
-
-                    currentPermutationTimes = newPermutationTimes;
-                    if (currentPermutationTimes.GetMaxCompleteTime() < bestPermutationTimes.GetMaxCompleteTime())
-                        bestPermutationTimes = currentPermutationTimes;
-                }
-
+                PerformEpochBatch();
                 temperature = reduceTemperature.Invoke(temperature);
             }
 
             return bestPermutationTimes;
+        }
+
+        private void PerformEpochBatch()
+        {
+            for (int i = 0; i < numberOfEpochs; i++) 
+                PerformEpoch();
+        }
+
+        private void PerformEpoch()
+        {
+            FSPTimes newPermutationTimes = GetNewPermutationTimes();
+            if (newPermutationTimes.GetMaxCompleteTime() > currentPermutationTimes.GetMaxCompleteTime())
+                newPermutationTimes = TryEscapingLocalMinimum(newPermutationTimes);
+            currentPermutationTimes = newPermutationTimes;
+            if (currentPermutationTimes.GetMaxCompleteTime() < bestPermutationTimes.GetMaxCompleteTime())
+                bestPermutationTimes = currentPermutationTimes;
+        }
+
+        private FSPTimes GetNewPermutationTimes()
+        {
+            List<Task> newPermutation = changePermutation.Invoke(currentPermutationTimes.Permutation);
+            FSPTimes newPermutationTimes = FSPTimes.Calculate(newPermutation);
+            return newPermutationTimes;
+        }
+
+        private FSPTimes TryEscapingLocalMinimum(FSPTimes newPermutationTimes)
+        {
+            if (ShouldNewPermutationBeAccepted(newPermutationTimes))
+                newPermutationTimes = currentPermutationTimes;
+            return newPermutationTimes;
+        }
+
+        private bool ShouldNewPermutationBeAccepted(FSPTimes newPermutationTimes)
+        {
+            double randomValue = Random.NextDouble();
+            int maxCompleteTimeDelta = currentPermutationTimes.GetMaxCompleteTime() - newPermutationTimes.GetMaxCompleteTime();
+            return randomValue > Math.Exp(maxCompleteTimeDelta / temperature);
         }
 
         public static Func<List<Task>, List<Task>> Swap()
