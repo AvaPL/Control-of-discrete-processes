@@ -26,7 +26,7 @@ namespace FSP
         private readonly LowerBoundLevel lowerBoundLevel;
         private readonly UpperBoundLevel upperBoundLevel;
 
-        public BranchAndBound(UpperBoundLevel upperBoundLevel, LowerBoundLevel lowerBoundLevel)
+        private BranchAndBound(UpperBoundLevel upperBoundLevel, LowerBoundLevel lowerBoundLevel)
         {
             this.upperBoundLevel = upperBoundLevel;
             this.lowerBoundLevel = lowerBoundLevel;
@@ -87,7 +87,7 @@ namespace FSP
             if (unorderedTasksCopy.Count > 0)
             {
                 int lowerBound = CalculateLowerBound(permutationCopy, unorderedTasksCopy.ToList());
-                if (!upperBound.HasValue || lowerBound <= upperBound)
+                if (!upperBound.HasValue || lowerBound < upperBound)
                     foreach (var task in unorderedTasksCopy)
                         Solve(unorderedTasksCopy, permutationCopy, task);
             }

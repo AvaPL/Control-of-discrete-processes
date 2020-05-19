@@ -26,7 +26,7 @@ namespace FSP
             SolveForEachInput(BruteForce.SolveUsingRecursion);
             Console.WriteLine("Johnson");
             SolveForEachInput(Johnson.Solve);
-
+            
             foreach (var level in (BranchAndBound.LowerBoundLevel[]) Enum.GetValues(
                 typeof(BranchAndBound.LowerBoundLevel)))
             {
@@ -34,7 +34,7 @@ namespace FSP
                 Console.WriteLine("Lower bound: " + level);
                 SolveForEachInput(x => BranchAndBound.Solve(x, BranchAndBound.UpperBoundLevel.Level0, level));
             }
-
+            
             foreach (var level in (BranchAndBound.UpperBoundLevel[]) Enum.GetValues(
                 typeof(BranchAndBound.UpperBoundLevel)))
             {

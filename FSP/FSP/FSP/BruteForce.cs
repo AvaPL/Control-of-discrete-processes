@@ -42,19 +42,19 @@ namespace FSP
             }
         }
 
-        private static LinkedList<Task> CopyWithoutTask(LinkedList<Task> tasksToAdd, Task taskToRemove)
-        {
-            LinkedList<Task> tasksToAddCopy = new LinkedList<Task>(tasksToAdd);
-            tasksToAddCopy.Remove(taskToRemove);
-            return tasksToAddCopy;
-        }
-
         private void PickOptimalPermutation(List<Task> permutation)
         {
             FSPTimes recursionResult = FSPTimes.Calculate(permutation);
             if (optimalPermutation == null ||
                 recursionResult.GetMaxCompleteTime() < optimalPermutation.GetMaxCompleteTime())
                 optimalPermutation = recursionResult;
+        }
+
+        private static LinkedList<Task> CopyWithoutTask(LinkedList<Task> tasksToAdd, Task taskToRemove)
+        {
+            LinkedList<Task> tasksToAddCopy = new LinkedList<Task>(tasksToAdd);
+            tasksToAddCopy.Remove(taskToRemove);
+            return tasksToAddCopy;
         }
     }
 }
