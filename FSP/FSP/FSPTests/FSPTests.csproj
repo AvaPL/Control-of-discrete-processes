@@ -48,6 +48,7 @@
         <Compile Include="FSPTimesTests.cs" />
         <Compile Include="JohnsonTests.cs" />
         <Compile Include="NEHTests.cs" />
+        <Compile Include="SimulatedAnnealingTests.cs" />
         <Compile Include="TaskReaderTests.cs" />
         <Compile Include="TaskTests.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />

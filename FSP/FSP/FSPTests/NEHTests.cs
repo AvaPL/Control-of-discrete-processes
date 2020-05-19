@@ -23,7 +23,7 @@ namespace FSPTests
         };
 
         [Test]
-        public void ShouldGiveOptimalMaxQuitTime()
+        public void ShouldGiveMaxQuitTime()
         {
             foreach (string filePath in filePaths)
             {
