@@ -7,5 +7,5 @@ Control of discrete processes course algorithms.
 * **Pawel Cembaluk**
 
 ## Built with
-
-TBA
+* [JetBrains Rider](https://www.jetbrains.com/rider/)
+* [Sourcetree](https://www.sourcetreeapp.com/)
