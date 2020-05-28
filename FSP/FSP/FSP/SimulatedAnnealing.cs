@@ -113,9 +113,8 @@ namespace FSP
             return firstPart.Concat(secondPart).Concat(thirdPart).ToList();
         }
 
-        public static Func<double, double> ReduceTemperatureLinear(double initialTemperature)
+        public static Func<double, double> ReduceTemperatureLinear(double linearCoefficient)
         {
-            double linearCoefficient = initialTemperature / 10e3;
             return temperature => ReduceTemperatureLinear(temperature, linearCoefficient);
         }
 
